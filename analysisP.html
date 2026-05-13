@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataWizard - Analysis</title>
+    <meta name="description"
+        content="DataWizard Business Analytics – Visualize and understand your data with AI-powered insights.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="analysisP.css">
+    <link rel="stylesheet" href="chatbot.css">
+    <script src="i18n.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <button class="close-btn" id="closeSidebar">×</button>
+            <h2>DataWizard</h2>
+        </div>
+        <button class="new-chat-btn">
+            <i class="fas fa-plus"></i> <span data-i18n="newChat">New Chat</span>
+        </button>
+        <div class="sidebar-nav">
+            <div class="nav-item">
+                <i class="fas fa-upload"></i><a href="home2.html#toUpload" data-i18n="uploadNew">Upload New Data</a>
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-chart-line"></i><a href="#" data-i18n="analysis">Analysis</a>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-history"></i><a href="history.html" data-i18n="history">History</a>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <div class="nav-item"><i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span></div>
+            <div class="nav-item"><i class="fas fa-shield-alt"></i> <span data-i18n="terms">Terms & Policies</span>
+            </div>
+            <div class="copyright">© 2026 DataWizard</div>
+        </div>
+    </aside>
+
+    <!-- ===== NAVBAR ===== -->
+    <header class="navbar">
+        <div class="logo">
+            <button class="menu-toggle" id="openSidebar"><i class="fas fa-bars"></i></button>
+            <img src="images/logoIcon.PNG" alt="logo">
+            <h1>DataWizard</h1>
+        </div>
+        <div class="nav-buttons">
+            <button class="btn" id="saveReportBtn" onclick="openExportModal()" data-i18n="saveReport">Save
+                Report</button>
+            <a href="home2.html"><button class="btn primary" data-i18n="newAnalysis">New Analysis</button></a>
+        </div>
+    </header>
+
+    <!-- ===== KPI STRIP ===== -->
+    <div class="kpi-strip" id="kpi-strip" style="display:none;">
+        <div class="kpi-item kpi-file">
+            <i class="fas fa-file-csv kpi-icon" style="color:#34d399;"></i>
+            <div class="kpi-info">
+                <span class="kpi-label" data-i18n="fileName">File Name</span>
+                <strong class="kpi-value kpi-filename-text" id="kpi-filename">—</strong>
+            </div>
+        </div>
+        <div class="kpi-item">
+            <i class="fas fa-grip-horizontal kpi-icon" style="color:#60a5fa;"></i>
+            <div class="kpi-info">
+                <span class="kpi-label" data-i18n="totalRows">Total Rows</span>
+                <strong class="kpi-value" id="kpi-rows">—</strong>
+            </div>
+        </div>
+        <div class="kpi-item">
+            <i class="fas fa-table-columns kpi-icon" style="color:#c084fc;"></i>
+            <div class="kpi-info">
+                <span class="kpi-label" data-i18n="totalCols">Total Columns</span>
+                <strong class="kpi-value" id="kpi-cols">—</strong>
+            </div>
+        </div>
+        <div class="kpi-item">
+            <i class="fas fa-circle-check kpi-icon" style="color:#4ade80;"></i>
+            <div class="kpi-info">
+                <span class="kpi-label" data-i18n="completeness">Completeness</span>
+                <strong class="kpi-value" id="kpi-completeness">—</strong>
+            </div>
+        </div>
+        <div class="kpi-item">
+            <i class="fas fa-triangle-exclamation kpi-icon" style="color:#fbbf24;"></i>
+            <div class="kpi-info">
+                <span class="kpi-label" data-i18n="missingCells">Missing Cells</span>
+                <strong class="kpi-value" id="kpi-missing">—</strong>
+            </div>
+        </div>
+        <div class="kpi-item">
+            <i class="fas fa-hashtag kpi-icon" style="color:#f472b6;"></i>
+            <div class="kpi-info">
+                <span class="kpi-label" data-i18n="numericCols">Numeric Columns</span>
+                <strong class="kpi-value" id="kpi-numeric">—</strong>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== LOADING ===== -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p data-i18n="loadingMsg">The Wizard is analyzing your data...</p>
+    </div>
+
+    <!-- ===== ERROR OVERLAY ===== -->
+    <div id="error-overlay" class="error-overlay" style="display:none;">
+        <div class="error-card">
+            <div class="error-icon-wrap"><i class="fas fa-triangle-exclamation"></i></div>
+            <h2 data-i18n="errorTitle">Oops! Something went wrong</h2>
+            <p id="error-message" data-i18n="noFileId">No file ID found. Please upload a file first.</p>
+            <a href="home2.html"><button class="btn primary"><i class="fas fa-arrow-left"></i> <span
+                        data-i18n="backHome">Back to Home</span></button></a>
+        </div>
+    </div>
+
+    <!-- ===== EXPORT MODAL ===== -->
+    <div id="export-modal" class="modal-overlay" style="display:none;" onclick="closeExportModal(event)">
+        <div class="modal-card">
+            <button class="modal-close-btn" onclick="closeExportModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-icon"><i class="fas fa-file-export"></i></div>
+            <h3 data-i18n="exportReport">Export Report</h3>
+            <p class="modal-subtitle" data-i18n="exportSubtitle">Choose your preferred export format</p>
+            <div class="export-options">
+                <button class="export-btn" onclick="doExportJSON()">
+                    <i class="fas fa-code" style="color:#60a5fa;"></i>
+                    <strong data-i18n="exportJSON">Export JSON</strong>
+                    <span data-i18n="exportJSONDesc">Full raw data & insights</span>
+                </button>
+                <button class="export-btn" onclick="doPrint()">
+                    <i class="fas fa-print" style="color:#c084fc;"></i>
+                    <strong data-i18n="exportPDF">Print View</strong>
+                    <span data-i18n="exportPDFDesc">Open browser print dialog</span>
+                </button>
+                <button class="export-btn" onclick="downloadServerPDF()">
+                    <i class="fas fa-file-pdf" style="color:#ef4444;"></i>
+                    <strong data-i18n="exportServerPDF">Download PDF Report</strong>
+                    <span data-i18n="exportServerPDFDesc">Generated by AI DataWizard</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="content" id="main-content" style="display:none;">
+
+        <div class="mode-selector">
+            <button onclick="switchMode('basic')" id="btn-basic" class="mode-btn active" data-i18n="basicAnalysis">Basic
+                Analysis</button>
+            <button onclick="switchMode('advanced')" id="btn-advanced" class="mode-btn" data-i18n="advancedInsights">AI
+                Advanced Insights</button>
+        </div>
+
+        <!-- ===== BASIC VIEW ===== -->
+        <div id="view-basic" class="analysis-view">
+            <div class="data-table-container">
+                <div class="table-toolbar">
+                    <h3><i class="fas fa-table"></i> <span data-i18n="dataPreview">Data Preview</span></h3>
+                    <div class="table-controls">
+                        <div class="search-box">
+                            <i class="fas fa-magnifying-glass"></i>
+                            <input type="text" id="table-search" data-i18n-placeholder="searchData" placeholder="Search data..."
+                                oninput="onTableSearch(this.value)">
+                        </div>
+                        <select id="page-size-select" onchange="onPageSizeChange(this.value)" class="page-size-select">
+                            <option value="10" data-i18n-rows="10">10 rows</option>
+                            <option value="25" data-i18n-rows="25">25 rows</option>
+                            <option value="50" data-i18n-rows="50">50 rows</option>
+                        </select>
+                        <button class="btn primary" onclick="cleanData()" id="btn-clean" style="margin-right:8px;">
+                            <i class="fas fa-broom"></i> <span data-i18n="cleanData">Clean Data</span>
+                        </button>
+                        <button class="btn export-csv-btn" onclick="exportTableCSV()">
+                            <i class="fas fa-file-csv"></i> <span data-i18n="exportCSV">Export CSV</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="table-info-bar">
+                    <span id="table-row-count" class="row-count-info"></span>
+                </div>
+                <div class="table-responsive">
+                    <table id="preview-table">
+                        <thead id="table-head"></thead>
+                        <tbody id="table-body"></tbody>
+                    </table>
+                </div>
+                <div class="pagination-controls" id="pagination-controls"></div>
+            </div>
+        </div>
+
+        <!-- ===== ADVANCED VIEW ===== -->
+        <div id="view-advanced" class="analysis-view" style="display:none;">
+
+
+            <!-- Column Analysis -->
+            <div class="glass-card pro-column-card" id="column-analysis-card">
+                <h3><i class="fas fa-columns"></i> <span data-i18n="columnAnalysis">Column Analysis Details</span></h3>
+                <div class="details-section" id="column-analysis-content"></div>
+            </div>
+
+            <div class="two-column-layout">
+                <!-- Numeric Statistics (Accordion) -->
+                <div class="glass-card" id="numeric-card" style="margin:0; display:flex; flex-direction:column;">
+                    <h3><i class="fas fa-calculator"></i> <span data-i18n="numericStats">Numeric Statistics</span></h3>
+                    <div id="numeric-filters" class="filter-pill-container" style="display:none;"></div>
+                    <div id="numeric-stats" class="custom-scrollbar"
+                        style="flex-grow:1; overflow-y:auto; padding-right:8px; margin-top:0.5rem;"></div>
+                </div>
+                <!-- Correlation Matrix -->
+                <div class="glass-card" id="corr-card"
+                    style="margin:0; display:flex; flex-direction:column; overflow:hidden;">
+                    <h3><i class="fas fa-project-diagram"></i> <span data-i18n="correlation">Correlation Matrix</span>
+                    </h3>
+                    <div id="corr-filters" class="filter-pill-container" style="display:none;"></div>
+                    <div id="correlation-content" class="custom-scrollbar"
+                        style="background:rgba(255,255,255,0.02);padding:1rem;border-radius:12px;margin-top:0.5rem;flex-grow:1;overflow-x:auto;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="glass-card" style="margin-top:2rem;">
+                <h3 style="margin-bottom:1.5rem;"><i class="fas fa-chart-pie"></i> <span data-i18n="visualizations">Data
+                        Visualizations</span></h3>
+                <div id="charts-grid"></div>
+            </div>
+
+
+            <!-- AI Business Insights -->
+            <div class="insights-box" style="margin-top:2rem;">
+                <h2><i class="fas fa-brain"></i> <span data-i18n="aiInsights">AI Business Insights</span></h2>
+                <div class="ai-grid">
+
+                    <div class="ai-insight-card">
+                        <div class="ai-insight-header">
+                            <div class="ai-insight-title"><span class="pulse-dot"></span><i class="fas fa-file-alt"
+                                    style="color:#9f7aea;"></i> <span data-i18n="executiveSummary">Executive
+                                    Summary</span></div>
+                            <div class="ai-card-actions">
+                                <span class="confidence-badge" id="conf-summary"></span>
+                                <button class="copy-btn" onclick="copyInsight('ai-summary')" title="Copy"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </div>
+                        <div id="ai-summary" class="ai-insight-text">Generating...</div>
+                    </div>
+
+                    <div class="ai-insight-card">
+                        <div class="ai-insight-header">
+                            <div class="ai-insight-title"><span class="pulse-dot"></span><i class="fas fa-tags"
+                                    style="color:#9f7aea;"></i> <span data-i18n="pricingStrategy">Pricing
+                                    Strategy</span></div>
+                            <div class="ai-card-actions">
+                                <span class="confidence-badge" id="conf-pricing"></span>
+                                <button class="copy-btn" onclick="copyInsight('ai-pricing')" title="Copy"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </div>
+                        <div id="ai-pricing" class="ai-insight-text">Generating...</div>
+                    </div>
+
+                    <div class="ai-insight-card">
+                        <div class="ai-insight-header">
+                            <div class="ai-insight-title"><span class="pulse-dot"></span><i class="fas fa-chart-line"
+                                    style="color:#9f7aea;"></i> <span data-i18n="growthOpp">Growth Opportunities</span>
+                            </div>
+                            <div class="ai-card-actions">
+                                <span class="confidence-badge" id="conf-growth"></span>
+                                <button class="copy-btn" onclick="copyInsight('ai-growth')" title="Copy"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </div>
+                        <div id="ai-growth" class="ai-insight-text">Generating...</div>
+                    </div>
+
+                    <div class="ai-insight-card">
+                        <div class="ai-insight-header">
+                            <div class="ai-insight-title"><span class="pulse-dot"></span><i class="fas fa-users"
+                                    style="color:#9f7aea;"></i> <span data-i18n="customerStrategy">Customer
+                                    Strategy</span></div>
+                            <div class="ai-card-actions">
+                                <span class="confidence-badge" id="conf-customer"></span>
+                                <button class="copy-btn" onclick="copyInsight('ai-customer')" title="Copy"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </div>
+                        <div id="ai-customer" class="ai-insight-text">Generating...</div>
+                    </div>
+
+                    <div class="ai-insight-card">
+                        <div class="ai-insight-header">
+                            <div class="ai-insight-title"><span class="pulse-dot"
+                                    style="background:#ef4444;animation-name:pulseRingRisk;"></span><i
+                                    class="fas fa-exclamation-triangle" style="color:#ff9800;"></i> <span
+                                    data-i18n="riskAlerts">Risk Alerts</span></div>
+                            <div class="ai-card-actions">
+                                <span class="confidence-badge" id="conf-risk"></span>
+                                <button class="copy-btn" onclick="copyInsight('ai-risk')" title="Copy"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </div>
+                        <div id="ai-risk" class="ai-insight-text">Generating...</div>
+                    </div>
+
+                    <div class="ai-insight-card">
+                        <div class="ai-insight-header">
+                            <div class="ai-insight-title"><span class="pulse-dot"></span><i class="fas fa-globe"
+                                    style="color:#9f7aea;"></i> <span data-i18n="globalComparison">Global
+                                    Comparison</span></div>
+                            <div class="ai-card-actions">
+                                <span class="confidence-badge" id="conf-global"></span>
+                                <button class="copy-btn" onclick="copyInsight('ai-global')" title="Copy"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </div>
+                        <div id="ai-global" class="ai-insight-text">Generating...</div>
+                    </div>
+
+                    <div class="ai-insight-card">
+                        <div class="ai-insight-header">
+                            <div class="ai-insight-title"><span class="pulse-dot"></span><i class="fas fa-clock"
+                                    style="color:#9f7aea;"></i> <span data-i18n="forecast">Forecast</span></div>
+                            <div class="ai-card-actions">
+                                <span class="confidence-badge" id="conf-forecast"></span>
+                                <button class="copy-btn" onclick="copyInsight('ai-forecast')" title="Copy"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </div>
+                        <div id="ai-forecast" class="ai-insight-text">Generating...</div>
+                    </div>
+
+                    <div class="ai-insight-card">
+                        <div class="ai-insight-header">
+                            <div class="ai-insight-title"><span class="pulse-dot"></span><i class="fas fa-chart-pie"
+                                    style="color:#9f7aea;"></i> <span data-i18n="aiChartSugg">AI Chart Suggestion</span>
+                            </div>
+                            <div class="ai-card-actions">
+                                <span class="confidence-badge" id="conf-chartsugg"></span>
+                                <button class="copy-btn" onclick="copyInsight('ai-chart-sugg')" title="Copy"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </div>
+                        <div id="ai-chart-sugg" class="ai-insight-text">Generating...</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="page-footer">
+        <p data-i18n="footerBiz">© 2026 DataWizard – Business Analytics Platform</p>
+    </footer>
+
+    <script>
+        // ============================================================
+        // Mode Switch
+        // ============================================================
+        window.switchMode = (mode) => {
+            document.getElementById('view-basic').style.display = mode === 'basic' ? 'block' : 'none';
+            document.getElementById('view-advanced').style.display = mode === 'advanced' ? 'block' : 'none';
+            document.getElementById('btn-basic').classList.toggle('active', mode === 'basic');
+            document.getElementById('btn-advanced').classList.toggle('active', mode === 'advanced');
+        };
+
+        // ============================================================
+        // Table State
+        // ============================================================
+        let tableData = [], tableKeys = [], sortConfig = { col: null, dir: 'asc' };
+        let currentPage = 1, pageSize = 10, searchQuery = '';
+
+        function onTableSearch(v) { searchQuery = v; currentPage = 1; renderTable(); }
+        function onPageSizeChange(v) { pageSize = parseInt(v); currentPage = 1; renderTable(); }
+        function gotoPage(p) {
+            const pages = Math.max(1, Math.ceil(getFiltered().length / pageSize));
+            currentPage = Math.max(1, Math.min(p, pages));
+            renderTable();
+        }
+        function getFiltered() {
+            return tableData.filter(row =>
+                Object.values(row).some(v => String(v ?? '').toLowerCase().includes(searchQuery.toLowerCase()))
+            );
+        }
+        function renderTable() {
+            let filtered = getFiltered();
+            if (sortConfig.col) {
+                filtered.sort((a, b) => {
+                    const av = a[sortConfig.col], bv = b[sortConfig.col];
+                    const an = parseFloat(av), bn = parseFloat(bv);
+                    if (!isNaN(an) && !isNaN(bn)) return sortConfig.dir === 'asc' ? an - bn : bn - an;
+                    return sortConfig.dir === 'asc'
+                        ? String(av ?? '').localeCompare(String(bv ?? ''))
+                        : String(bv ?? '').localeCompare(String(av ?? ''));
+                });
+            }
+            const total = filtered.length;
+            const pages = Math.max(1, Math.ceil(total / pageSize));
+            if (currentPage > pages) currentPage = pages;
+            const start = (currentPage - 1) * pageSize;
+            const pageData = filtered.slice(start, start + pageSize);
+
+            // Header
+            const head = document.getElementById('table-head');
+            head.innerHTML = '';
+            const hr = document.createElement('tr');
+            tableKeys.forEach(key => {
+                const th = document.createElement('th');
+                th.className = 'sortable-th';
+                const isSorted = sortConfig.col === key;
+                th.innerHTML = `${key} <span class="sort-icon">${isSorted ? (sortConfig.dir === 'asc' ? '↑' : '↓') : '⇅'}</span>`;
+                th.onclick = () => {
+                    if (sortConfig.col === key) sortConfig.dir = sortConfig.dir === 'asc' ? 'desc' : 'asc';
+                    else { sortConfig.col = key; sortConfig.dir = 'asc'; }
+                    renderTable();
+                };
+                hr.appendChild(th);
+            });
+            head.appendChild(hr);
+
+            // Body
+            const body = document.getElementById('table-body');
+            body.innerHTML = '';
+            if (!pageData.length) {
+                body.innerHTML = `<tr><td colspan="${tableKeys.length}" class="no-results">No results found</td></tr>`;
+            } else {
+                pageData.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tableKeys.forEach(key => {
+                        const td = document.createElement('td');
+                        td.textContent = row[key] ?? '';
+                        tr.appendChild(td);
+                    });
+                    body.appendChild(tr);
+                });
+            }
+
+            // Info
+            document.getElementById('table-row-count').textContent =
+                `Showing ${total === 0 ? 0 : start + 1}–${Math.min(start + pageSize, total)} of ${total} rows${searchQuery ? ' (filtered)' : ''}`;
+
+            // Pagination
+            const ctrl = document.getElementById('pagination-controls');
+            if (pages <= 1) { ctrl.innerHTML = ''; return; }
+            let ph = `<button class="page-btn" onclick="gotoPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i></button>`;
+            for (let i = 1; i <= pages; i++) {
+                if (i === 1 || i === pages || (i >= currentPage - 2 && i <= currentPage + 2))
+                    ph += `<button class="page-btn${i === currentPage ? ' active' : ''}" onclick="gotoPage(${i})">${i}</button>`;
+                else if (i === currentPage - 3 || i === currentPage + 3)
+                    ph += `<span class="page-ellipsis">…</span>`;
+            }
+            ph += `<button class="page-btn" onclick="gotoPage(${currentPage + 1})" ${currentPage === pages ? 'disabled' : ''}><i class="fas fa-chevron-right"></i></button>`;
+            ctrl.innerHTML = ph;
+        }
+        function exportTableCSV() {
+            if (!tableData.length) return;
+            const csv = [tableKeys.join(','),
+            ...tableData.map(r => tableKeys.map(k => `"${String(r[k] ?? '').replace(/"/g, '""')}"`).join(','))
+            ].join('\n');
+            const a = Object.assign(document.createElement('a'), {
+                href: URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })),
+                download: 'datawizard-data.csv'
+            });
+            a.click();
+        }
+
+        let activeNumericCols = new Set();
+        let activeCorrCols = new Set();
+
+        window.toggleNumericCol = (col) => {
+            if (activeNumericCols.has(col)) activeNumericCols.delete(col);
+            else activeNumericCols.add(col);
+            renderNumericStats(_allData.adv.numeric_statistics || {});
+            renderNumericFilters(_allData.adv.numeric_statistics || {});
+        };
+
+        window.toggleCorrCol = (col) => {
+            if (activeCorrCols.has(col)) activeCorrCols.delete(col);
+            else activeCorrCols.add(col);
+            renderCorrelation(_allData.adv.correlation || {});
+            renderCorrFilters(_allData.adv.correlation || {});
+        };
+
+        function renderNumericFilters(stats) {
+            const filtersDiv = document.getElementById('numeric-filters');
+            const cols = Object.keys(stats || {});
+            if (!cols.length) { filtersDiv.style.display = 'none'; return; }
+            filtersDiv.style.display = 'flex';
+            filtersDiv.innerHTML = cols.map(c =>
+                `<div class="filter-pill ${activeNumericCols.has(c) ? 'active' : ''}" onclick="toggleNumericCol('${c}')">
+            <i class="fas fa-check" style="opacity:${activeNumericCols.has(c) ? 1 : 0};"></i> ${c}
+        </div>`
+            ).join('');
+        }
+
+        function renderCorrFilters(cMap) {
+            const filtersDiv = document.getElementById('corr-filters');
+            const cols = Object.keys(cMap || {});
+            if (!cols.length || typeof cMap[cols[0]] !== 'object') { filtersDiv.style.display = 'none'; return; }
+            filtersDiv.style.display = 'flex';
+            filtersDiv.innerHTML = cols.map(c =>
+                `<div class="filter-pill ${activeCorrCols.has(c) ? 'active' : ''}" onclick="toggleCorrCol('${c}')">
+            <i class="fas fa-check" style="opacity:${activeCorrCols.has(c) ? 1 : 0};"></i> ${c}
+        </div>`
+            ).join('');
+        }
+
+        window.toggleAccordion = (header) => {
+            const body = header.nextElementSibling;
+            const chevron = header.querySelector('.stat-chevron');
+            const isOpen = body.style.maxHeight && body.style.maxHeight !== '0px';
+            body.style.maxHeight = isOpen ? '0px' : body.scrollHeight + 'px';
+            body.style.opacity = isOpen ? '0' : '1';
+            chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+        };
+
+        function renderNumericStats(stats) {
+            const container = document.getElementById('numeric-stats');
+            if (!stats || !Object.keys(stats).length) {
+                container.innerHTML = `<p style="color:#b0a0ff;font-style:italic;">No numeric columns found.</p>`;
+                return;
+            }
+            const colsToRender = Object.keys(stats).filter(c => activeNumericCols.has(c));
+            if (!colsToRender.length) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:3rem 1rem; color:#b0a0ff;">
+                        <i class="fas fa-filter" style="font-size:2.5rem; opacity:0.3; margin-bottom:1rem; display:block;"></i>
+                        <p style="font-style:italic; font-size:1.1rem;">No columns selected.</p>
+                        <p style="font-size:0.9rem; opacity:0.7; margin-top:0.5rem;">Please select one or more columns from the filters above to view detailed statistics.</p>
+                    </div>`;
+                return;
+            }
+
+            let html = '';
+            for (const col of colsToRender) {
+                const s = stats[col];
+                const min = s.min ?? 0, max = s.max ?? 0, mean = s.mean ?? 0, std = s.std ?? 0;
+                const rng = (max - min) || 1;
+                
+                // Percentages for the main range track
+                const meanPct = Math.max(0, Math.min(100, ((mean - min) / rng) * 100)).toFixed(1);
+                
+                // Percentages for the individual magnitude bars (relative to max in this column for comparison)
+                // Or maybe relative to the range? Let's do magnitude relative to max vs min range.
+                const absMax = Math.max(Math.abs(max), Math.abs(min)) || 1;
+                const getPct = (val) => Math.max(0, Math.min(100, (Math.abs(val) / absMax) * 100)).toFixed(1);
+
+                const stdHigh = s.std && s.std > rng * 0.3;
+                
+                html += `
+        <div class="stat-accordion">
+          <div class="stat-accordion-header" onclick="toggleAccordion(this)">
+            <span class="stat-col-name"><i class="fas fa-hashtag" style="color:#60a5fa;font-size:.8rem;"></i> ${col}</span>
+            <div class="stat-preview">
+              <span class="stat-badge blue">Avg: ${typeof mean === 'number' ? mean.toFixed(2) : mean}</span>
+              <span class="stat-badge green">Min: ${min}</span>
+              <span class="stat-badge red">Max: ${max}</span>
+            </div>
+            <i class="fas fa-chevron-down stat-chevron"></i>
+          </div>
+          <div class="stat-accordion-body">
+            <div class="stat-mini-grid">
+              <div class="stat-mini-card"><span>Mean</span><strong style="color:#60a5fa;">${typeof mean === 'number' ? mean.toFixed(2) : mean}</strong></div>
+              <div class="stat-mini-card"><span>Median</span><strong style="color:#c084fc;">${typeof s.median === 'number' ? s.median.toFixed(2) : (s.median ?? 'N/A')}</strong></div>
+              <div class="stat-mini-card${stdHigh ? ' high-std' : ''}"><span>Std Dev</span><strong style="color:${stdHigh ? '#fbbf24' : '#94a3b8'};">${typeof s.std === 'number' ? s.std.toFixed(2) : (s.std ?? 'N/A')}</strong></div>
+              <div class="stat-mini-card"><span>Count</span><strong style="color:#e2e8f0;">${s.count ?? 'N/A'}</strong></div>
+            </div>
+
+            <div class="stat-bar-group">
+                <div class="stat-bar-item">
+                    <div class="stat-bar-label"><span>Distribution Range (Min to Max)</span><span>Mean: ${mean.toFixed(2)}</span></div>
+                    <div class="stat-range-track" style="margin-top:0;">
+                        <div class="stat-range-fill" style="width:${meanPct}%;"></div>
+                        <div class="stat-mean-marker" style="left:${meanPct}%;" title="Mean: ${mean.toFixed(2)}"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-bar-item">
+                    <div class="stat-bar-label"><span>Standard Deviation Magnitude</span><span>${std.toFixed(2)}</span></div>
+                    <div class="stat-bar-bg"><div class="stat-bar-fill std" style="width:${Math.min(100, (std/rng)*100)}%;"></div></div>
+                </div>
+            </div>
+
+            <div class="stat-range-labels" style="display:flex; justify-content:space-between; margin-top:0.5rem; font-size:0.75rem; color:#888;">
+                <span>Min: ${min}</span>
+                <span>Max: ${max}</span>
+            </div>
+          </div>
+        </div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function renderCorrelation(cMap) {
+            const cKeysRaw = Object.keys(cMap || {});
+            const cKeys = cKeysRaw.filter(k => activeCorrCols.has(k));
+
+            let cHTML = '';
+            if (cKeysRaw.length === 0 || typeof cMap[cKeysRaw[0]] !== 'object') {
+                cHTML = '<p>No numeric columns for correlation.</p>';
+            } else if (cKeys.length === 0) {
+                cHTML = `
+                    <div style="text-align:center; padding:3rem 1rem; color:#b0a0ff;">
+                        <i class="fas fa-braille" style="font-size:2.5rem; opacity:0.3; margin-bottom:1rem; display:block;"></i>
+                        <p style="font-style:italic; font-size:1.1rem;">No columns selected.</p>
+                        <p style="font-size:0.9rem; opacity:0.7; margin-top:0.5rem;">Select numeric columns from the filters to visualize relationships.</p>
+                    </div>`;
+            } else {
+                cHTML = `<div class="heatmap-wrapper"><table class="correlation-heatmap-table"><thead><tr><th></th>`;
+                cKeys.forEach(k => cHTML += `<th class="col-header"><div>${k}</div></th>`);
+                cHTML += `</tr></thead><tbody>`;
+                cKeys.forEach((k1, i) => {
+                    cHTML += `<tr><td class="row-header">${k1}</td>`;
+                    cKeys.forEach((k2, j) => {
+                        if (j > i) { cHTML += `<td class="heatmap-cell empty-cell"></td>`; return; }
+                        const val = cMap[k1][k2];
+                        let bg = 'rgba(255,255,255,.02)', tc = 'rgba(255,255,255,.4)', dv = val;
+                        if (typeof val === 'number') {
+                            dv = val.toFixed(2);
+                            bg = val > 0 ? `rgba(170,0,255,${val})` : `rgba(98,0,234,${Math.abs(val)})`;
+                            if (Math.abs(val) > 0.4) tc = '#fff';
+                            if (i === j) { bg = 'rgba(170,0,255,.9)'; tc = '#fff'; }
+                        }
+                        cHTML += `<td class="heatmap-cell" style="background:${bg};color:${tc};" title="${k1}&${k2}: ${dv}">${dv || '-'}</td>`;
+                    });
+                    cHTML += `</tr>`;
+                });
+                cHTML += `</tbody></table></div>
+        <div class="correlation-legend">
+            <span>-1.0 (Inverse)</span>
+            <div style="width:200px;height:8px;background:linear-gradient(to right,rgba(98,0,234,1),rgba(20,10,40,1),rgba(170,0,255,1));border-radius:8px;"></div>
+            <span>1.0 (Direct)</span>
+        </div>`;
+            }
+            document.getElementById('correlation-content').innerHTML = cHTML;
+        }
+
+        // ============================================================
+        // Column Analysis – Color Badges
+        // ============================================================
+        function getColType(cData) {
+            if (cData.is_category_column) return { icon: 'fa-font', color: '#c084fc', label: 'Category' };
+            if (cData.is_money_column) return { icon: 'fa-dollar-sign', color: '#4ade80', label: 'Currency' };
+            if (cData.is_date_column) return { icon: 'fa-calendar-days', color: '#fbbf24', label: 'Date/Time' };
+            const dt = (cData.data_type || '').toLowerCase();
+            if (dt.includes('float') || dt.includes('dec'))
+                return { icon: 'fa-hashtag', color: '#60a5fa', label: 'Decimal Number' };
+            if (dt.includes('int') || dt.includes('num'))
+                return { icon: 'fa-hashtag', color: '#60a5fa', label: 'Whole Number' };
+            if (dt.includes('bool'))
+                return { icon: 'fa-check-circle', color: '#34d399', label: 'True/False' };
+            return { icon: 'fa-font', color: '#c084fc', label: 'Text' };
+        }
+        function renderColumnAnalysis(colData) {
+            const cards = [];
+            for (const col in colData) {
+                const d = colData[col];
+                const ti = getColType(d);
+                const total = d.total_values || d.total || 1;
+                const missing = d.missing_values ?? 0;
+                const missPct = Math.min(100, Math.round((missing / total) * 100));
+                const missColor = missPct > 30 ? '#f87171' : missPct > 10 ? '#fbbf24' : '#4ade80';
+                cards.push(`
+        <div class="col-detail-box" style="border-top:3px solid ${ti.color};">
+          <div class="col-type-badge">
+            <div class="col-type-icon" style="color:${ti.color};border-color:${ti.color}40;background:${ti.color}18;">
+              <i class="fas ${ti.icon}"></i>
+            </div>
+            <span style="color:${ti.color};font-size:.8rem;font-weight:700;">${ti.label}</span>
+          </div>
+          <strong class="col-name">${col}</strong>
+          <div class="col-stats">
+            <div class="missing-bar-wrapper">
+              <div class="missing-bar-label">
+                <span>Missing:</span>
+                <span style="color:${missColor};font-weight:600;">${missing} <em style="opacity:.7;">(${missPct}%)</em></span>
+              </div>
+              <div class="missing-bar-track">
+                <div class="missing-bar-fill" style="width:${missPct}%;background:${missColor};"></div>
+              </div>
+            </div>
+          </div>
+        </div>`);
+            }
+            document.getElementById('column-analysis-content').innerHTML =
+                cards.length ? cards.join('') : '<p>No column data available.</p>';
+        }
+
+        // ============================================================
+        // AI Insights – Bullets + Confidence + Copy
+        // ============================================================
+        function formatBullets(text) {
+            if (!text || text.length < 10) return `<span style="color:#b0a0ff;font-style:italic;">${text || '...'}</span>`;
+            const parts = text
+                .split(/(?<=[.!؟])\s+(?=[A-ZА-Яأ-ي])|(?=\d+\.\s)|(?=[•\-–]\s)/)
+                .map(p => p.replace(/^[\d]+\.\s*/, '').replace(/^[•\-–]\s*/, '').trim())
+                .filter(p => p.length > 8);
+            if (parts.length <= 1) return `<p class="insight-plain">${text}</p>`;
+            return `<ul class="insight-bullets">${parts.map(p => `<li>${p}</li>`).join('')}</ul>`;
+        }
+        function getConf(text) {
+            if (!text || text.length < 40) return { label: 'Low', color: '#f87171', bg: 'rgba(248,113,113,.15)' };
+            if (text.length < 150) return { label: 'Medium', color: '#fbbf24', bg: 'rgba(251,191,36,.15)' };
+            return { label: 'High', color: '#4ade80', bg: 'rgba(74,222,128,.15)' };
+        }
+        function setInsight(elId, confId, text) {
+            const el = document.getElementById(elId);
+            const confEl = document.getElementById(confId);
+            if (!el) return;
+            const content = (text && text.trim().length > 0 && text !== 'generating...') ? text : 'No insights generated for this metric.';
+            el.innerHTML = formatBullets(content);
+            if (confEl) {
+                const c = getConf(text);
+                confEl.textContent = c.label;
+                confEl.style.color = c.color;
+                confEl.style.background = c.bg;
+                confEl.style.border = `1px solid ${c.color}50`;
+            }
+        }
+        window.copyInsight = (elId) => {
+            const el = document.getElementById(elId);
+            if (!el) return;
+            navigator.clipboard.writeText(el.innerText || el.textContent).then(() => {
+                const btn = el.closest('.ai-insight-card')?.querySelector('.copy-btn');
+                if (btn) {
+                    btn.innerHTML = '<i class="fas fa-check"></i>';
+                    btn.style.color = '#4ade80';
+                    setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i>'; btn.style.color = ''; }, 2000);
+                }
+            });
+        };
+
+        // ============================================================
+        // Charts (Carousel – unchanged logic)
+        // ============================================================
+        function renderCharts(options) {
+            const grid = document.getElementById('charts-grid');
+            grid.innerHTML = '';
+            if (!options || !options.length) {
+                grid.innerHTML = `<p style="color:#ffaaaa;text-align:center;padding:2rem;grid-column:1/-1;">No visualizations returned from backend.</p>`;
+                return;
+            }
+            const grouped = {};
+            options.forEach(opt => {
+                const type = (opt.chart_type || 'other').toLowerCase();
+                if (!grouped[type]) grouped[type] = [];
+                grouped[type].push(opt);
+            });
+            window.chartCarousels = {};
+            window.changeChartSlide = (type, dir) => {
+                const st = window.chartCarousels[type]; if (!st) return;
+                st.cards[st.currentIndex].style.display = 'none';
+                st.currentIndex = (st.currentIndex + dir + st.cards.length) % st.cards.length;
+                st.cards[st.currentIndex].style.display = 'block';
+                const ctr = document.getElementById(`counter-${type}`);
+                if (ctr) ctr.innerText = `${st.currentIndex + 1} / ${st.cards.length}`;
+            };
+            const elegantColors = ['#8e2de2', '#fae379', '#4ade80', '#e91e63', '#00bcd4', '#ff9800', '#9c27b0', '#607d8b'];
+            Object.keys(grouped).forEach(type => {
+                const opts = grouped[type];
+                const safe = type.replace(/\s+/g, '-');
+                const rowDiv = document.createElement('div'); rowDiv.className = 'chart-type-row';
+                const hdr = document.createElement('div'); hdr.className = 'chart-type-header';
+                hdr.innerHTML = `<h4><i class="fas fa-chart-area"></i> ${type.toUpperCase()} CHARTS</h4><span id="counter-${safe}" class="chart-counter">1 / ${opts.length}</span>`;
+                rowDiv.appendChild(hdr);
+                const cc = document.createElement('div'); cc.className = 'carousel-container';
+                const lBtn = document.createElement('button'); lBtn.className = 'carousel-btn';
+                lBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                if (opts.length <= 1) lBtn.style.visibility = 'hidden';
+                lBtn.onclick = () => window.changeChartSlide(safe, -1);
+                const track = document.createElement('div'); track.className = 'carousel-track';
+                const rBtn = document.createElement('button'); rBtn.className = 'carousel-btn';
+                rBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                if (opts.length <= 1) rBtn.style.visibility = 'hidden';
+                rBtn.onclick = () => window.changeChartSlide(safe, 1);
+                cc.append(lBtn, track, rBtn);
+                rowDiv.appendChild(cc);
+                grid.appendChild(rowDiv);
+                window.chartCarousels[safe] = { cards: [], currentIndex: 0 };
+                opts.forEach((opt, idx) => {
+                    const card = document.createElement('div'); card.className = 'carousel-card';
+                    card.style.display = idx === 0 ? 'block' : 'none';
+                    const title = document.createElement('h5'); title.className = 'chart-reason-title';
+                    title.textContent = opt.reason || 'No description';
+                    const wrap = document.createElement('div'); wrap.className = 'canvas-wrapper'; wrap.style.height = '350px';
+                    const canvas = document.createElement('canvas');
+                    wrap.appendChild(canvas); 
+                    
+                    const expl = document.createElement('p'); expl.className = 'chart-explanation';
+                    const lang = getCurrentLang();
+                    const expText = opt.explanation ? (opt.explanation[lang] || opt.explanation['en']) : '';
+                    if (expText) {
+                        expl.innerHTML = `<i class="fas fa-lightbulb" style="color:#fbbf24; margin-right:5px; margin-left:5px;"></i> ${expText}`;
+                    }
+                    
+                    card.append(title, wrap);
+                    if (expText) card.append(expl);
+                    
+                    track.appendChild(card);
+                    window.chartCarousels[safe].cards.push(card);
+                    setTimeout(() => {
+                        try {
+                            const ctx = canvas.getContext('2d');
+                            let cData = opt.data;
+                            const cType = opt.chart_type === 'histogram' ? 'bar' : (opt.chart_type || 'bar');
+                            
+                            if (!cData || !cData.datasets || cData.datasets.length === 0) {
+                                cData = { 
+                                    labels: ['No Data Available'], 
+                                    datasets: [{ 
+                                        label: 'Data Missing', 
+                                        data: [0], 
+                                        backgroundColor: ['#6a1b9a'] 
+                                    }] 
+                                };
+                                title.textContent += ' (Missing visual data from backend)';
+                            } else {
+                                cData.datasets.forEach(ds => {
+                                    if (!ds.backgroundColor || cType === 'pie' || cType === 'doughnut') {
+                                        ds.backgroundColor = elegantColors.slice(0, cData.labels?.length || 1);
+                                        ds.borderColor = 'rgba(255,255,255,.1)'; 
+                                        ds.borderWidth = 1;
+                                    }
+                                });
+                            }
+                            
+                            new Chart(ctx, {
+                                type: cType, data: cData,
+                                options: {
+                                    responsive: true, maintainAspectRatio: false,
+                                    plugins: { legend: { labels: { color: '#d4c2ff', font: { family: 'Tajawal' } } } },
+                                    scales: (cType !== 'pie' && cType !== 'doughnut') ? {
+                                        y: { grid: { color: 'rgba(255,255,255,.05)' }, ticks: { color: '#d4c2ff' } },
+                                        x: { grid: { display: false }, ticks: { color: '#d4c2ff' } }
+                                    } : {}
+                                }
+                            });
+                        } catch (err) {
+                            console.error("Chart Render Err:", err);
+                            title.textContent = 'Error Rendering Chart';
+                            if (typeof Chart === 'undefined') {
+                                wrap.innerHTML = `<div style="color:#f87171; padding:2rem; text-align:center;">
+                                    <i class="fas fa-exclamation-triangle fa-3x" style="margin-bottom:1rem;"></i><br>
+                                    Chart.js Library failed to load.<br>Please check your internet connection or ad-blocker.
+                                </div>`;
+                            } else {
+                                const ctx = canvas.getContext('2d');
+                                new Chart(ctx, {
+                                    type: 'bar',
+                                    data: { labels: ['Error'], datasets: [{label: err.message, data: [1], backgroundColor: ['#f87171']}] },
+                                    options: { maintainAspectRatio: false }
+                                });
+                            }
+                        }
+                    }, 0);
+                });
+            });
+        }
+
+        // ============================================================
+        // Export & Modal
+        // ============================================================
+        let _allData = {};
+        function openExportModal() { document.getElementById('export-modal').style.display = 'flex'; }
+        function closeExportModal(e) {
+            if (!e || e.target === document.getElementById('export-modal'))
+                document.getElementById('export-modal').style.display = 'none';
+        }
+        function doExportJSON() {
+            const blob = new Blob([JSON.stringify(_allData, null, 2)], { type: 'application/json' });
+            const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'datawizard-report.json' });
+            a.click(); closeExportModal();
+        }
+        function doPrint() { closeExportModal(); setTimeout(() => window.print(), 300); }
+        function downloadServerPDF() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fileId = urlParams.get('id') || urlParams.get('file_id') || localStorage.getItem('last_file_id');
+            window.open(`http://127.0.0.1:8000/reports/${fileId}/export/pdf`, '_blank');
+            closeExportModal();
+        }
+
+        async function cleanData() {
+            const action = prompt("Enter cleaning action (drop_missing, fill_mean, drop_outliers):", "fill_mean");
+            if (!action) return;
+            
+            document.getElementById('loading-overlay').style.display = 'flex';
+            document.querySelector('#loading-overlay p').textContent = "Cleaning your data...";
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const fileId = urlParams.get('id') || urlParams.get('file_id') || localStorage.getItem('last_file_id');
+            
+            try {
+                const res = await fetch(`http://127.0.0.1:8000/analysis/clean/${fileId}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ action: action })
+                });
+                const data = await res.json();
+                if (data.new_file_id) {
+                    alert(data.message);
+                    window.location.href = `analysisP.html?id=${data.new_file_id}`;
+                } else {
+                    alert("Error: " + JSON.stringify(data));
+                    document.getElementById('loading-overlay').style.display = 'none';
+                }
+            } catch (err) {
+                alert("Failed to clean data: " + err.message);
+                document.getElementById('loading-overlay').style.display = 'none';
+            }
+        }
+
+        // ============================================================
+        // History
+        // ============================================================
+        function saveHistory(basic, fileId) {
+            const h = JSON.parse(localStorage.getItem('dw-history') || '[]');
+            const entry = {
+                id: fileId,
+                filename: basic.file_name || basic.original_name || 'Untitled',
+                rows: basic.rows || basic.basic_info?.total_rows || 0,
+                cols: basic.columns || basic.basic_info?.total_columns || 0,
+                date: new Date().toISOString()
+            };
+            const updated = [entry, ...h.filter(x => x.id !== fileId)].slice(0, 10);
+            localStorage.setItem('dw-history', JSON.stringify(updated));
+        }
+
+        // ============================================================
+        // KPI Strip
+        // ============================================================
+        function updateKPIStrip(basic, adv) {
+            document.getElementById('kpi-strip').style.display = 'flex';
+            document.getElementById('kpi-rows').textContent = basic.rows || basic.basic_info?.total_rows || 0;
+            document.getElementById('kpi-cols').textContent = basic.columns || basic.basic_info?.total_columns || 0;
+            document.getElementById('kpi-filename').textContent = basic.file_name || basic.original_name || 'N/A';
+            const comp = adv?.data_quality?.completeness_percentage ?? 0;
+            const compEl = document.getElementById('kpi-completeness');
+            compEl.textContent = comp + '%';
+            compEl.style.color = comp >= 90 ? '#4ade80' : comp >= 70 ? '#fbbf24' : '#f87171';
+            document.getElementById('kpi-missing').textContent = adv?.data_quality?.empty_cells ?? 0;
+            document.getElementById('kpi-numeric').textContent = Object.keys(adv?.numeric_statistics || {}).length;
+        }
+
+        // ============================================================
+        // Main Loader
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            let fileId = urlParams.get('id') || urlParams.get('file_id') || localStorage.getItem('last_file_id');
+
+            const loading = document.getElementById('loading-overlay');
+            const main = document.getElementById('main-content');
+            const errorOvl = document.getElementById('error-overlay');
+
+            if (!fileId) {
+                loading.style.display = 'none';
+                errorOvl.style.display = 'flex';
+                return;
+            }
+
+            async function loadAll() {
+                try {
+                    const [basicRes, advRes, aiRes, vizRes] = await Promise.all([
+                        fetch(`http://127.0.0.1:8000/analysis/analyze/${fileId}`),
+                        fetch(`http://127.0.0.1:8000/analysis/advanced/${fileId}`),
+                        fetch(`http://127.0.0.1:8000/ai/insights/${fileId}?lang=${getCurrentLang()}`),
+                        fetch(`http://127.0.0.1:8000/visualization/${fileId}`)
+                    ]);
+                    const basic = await basicRes.json();
+                    const adv = await advRes.json();
+                    const aiData = await aiRes.json();
+                    const vizData = await vizRes.json();
+
+                    _allData = { basic, adv, aiData, vizData };
+
+                    // Custom file name check
+                    const cName = localStorage.getItem('custom_name_' + fileId);
+                    if (cName) {
+                        basic.file_name = cName;
+                    }
+
+                    // KPI Strip
+                    updateKPIStrip(basic, adv);
+
+                    // Table
+                    const rows = basic.first_rows || basic.sample_data || [];
+                    if (rows.length) {
+                        tableData = rows;
+                        tableKeys = Object.keys(rows[0]);
+                        renderTable();
+                    }
+
+                    // Old metrics grid (basic)
+                    document.getElementById('display-filename') && (document.getElementById('display-filename').textContent = basic.file_name || 'Untitled');
+                    document.getElementById('stat-rows') && (document.getElementById('stat-rows').textContent = basic.rows || 0);
+                    document.getElementById('stat-cols') && (document.getElementById('stat-cols').textContent = basic.columns || 0);
+
+
+                    // Initialize sets if they are empty (first load)
+                    // Filters start empty as per refinement request
+                    activeNumericCols.clear();
+                    activeCorrCols.clear();
+
+                    // Column Analysis
+                    renderColumnAnalysis(adv.column_analysis || {});
+
+                    // Numeric Stats Accordion
+                    renderNumericFilters(adv.numeric_statistics || {});
+                    renderNumericStats(adv.numeric_statistics || {});
+
+                    // Correlation
+                    renderCorrFilters(adv.correlation || {});
+                    renderCorrelation(adv.correlation || {});
+
+                    // Charts (Filter out data-less options from backend)
+                    let vizList = (vizData.visualization_options || []).filter(opt => opt.data && opt.data.datasets && opt.data.datasets.length > 0);
+                    
+                    if (!vizList.length) {
+                        const statKeys = Object.keys(adv.numeric_statistics || {});
+                        if (statKeys.length) {
+                            const fallbackColors = ['#8e2de2', '#fae379', '#4ade80', '#e91e63', '#00bcd4', '#ff9800', '#9c27b0', '#607d8b'];
+                            vizList.push({
+                                chart_type: 'bar',
+                                reason: 'Average values across numeric columns',
+                                data: {
+                                    labels: statKeys,
+                                    datasets: [{
+                                        label: 'Mean Value',
+                                        data: statKeys.map(k => adv.numeric_statistics[k].mean || 0),
+                                        backgroundColor: statKeys.map((_, i) => fallbackColors[i % fallbackColors.length])
+                                    }]
+                                }
+                            });
+                             vizList.push({
+                                chart_type: 'pie',
+                                reason: 'Data Quality (Missing vs Present rows)',
+                                data: {
+                                    labels: ['Present Data', 'Missing Data'],
+                                    datasets: [{
+                                        data: [
+                                            (adv.data_quality?.total_cells || 100) - (adv.data_quality?.empty_cells || 0),
+                                            adv.data_quality?.empty_cells || 0
+                                        ],
+                                        backgroundColor: ['#4ade80', '#f87171']
+                                    }]
+                                }
+                            });
+                        }
+                    }
+                    renderCharts(vizList);
+
+
+                    // AI Insights
+                    const biz = aiData.business_insights || aiData;
+                    if (biz.error || aiData.error || (biz.message && biz.message.includes('No data'))) {
+                        const errMsg = biz.error || aiData.error || biz.message;
+                        setInsight('ai-summary', 'conf-summary', `AI Error: ${errMsg}. Please ensure the Gemini API key is configured correctly in the backend.`);
+                        ['ai-pricing','ai-growth','ai-customer','ai-risk','ai-global','ai-forecast','ai-chart-sugg']
+                        .forEach(id => setInsight(id, '', 'Analysis failed.'));
+                    } else {
+                        setInsight('ai-summary',    'conf-summary',   biz.summary || biz.executive_summary || '');
+                        setInsight('ai-pricing',    'conf-pricing',   biz.pricing_strategy || '');
+                        setInsight('ai-growth',     'conf-growth',    biz.growth_opportunities || biz.opportunities || '');
+                        setInsight('ai-customer',   'conf-customer',  biz.customer_strategy || '');
+                        setInsight('ai-risk',       'conf-risk',      biz.risk_alerts || biz.risk_assessment || '');
+                        setInsight('ai-global',     'conf-global',    biz.global_comparison || '');
+                        setInsight('ai-forecast',   'conf-forecast',  biz.forecast_message || '');
+                        setInsight('ai-chart-sugg', 'conf-chartsugg', biz.chart_suggestion || '');
+                    }
+
+                    // Save to history
+                    saveHistory(basic, fileId);
+
+                    loading.style.display = 'none';
+                    main.style.display = 'block';
+
+                } catch (err) {
+                    console.error(err);
+                    loading.style.display = 'none';
+                    errorOvl.style.display = 'flex';
+                    document.getElementById('error-message').textContent = 'Error loading data: ' + err.message;
+                }
+            }
+
+            setTimeout(loadAll, 600);
+
+            // Sidebar
+            const sidebar = document.getElementById('sidebar');
+            document.getElementById('openSidebar').addEventListener('click', () => sidebar.classList.add('open'));
+            document.getElementById('closeSidebar').addEventListener('click', () => sidebar.classList.remove('open'));
+            document.addEventListener('click', e => {
+                if (!sidebar.contains(e.target) && !document.getElementById('openSidebar').contains(e.target))
+                    sidebar.classList.remove('open');
+            });
+
+            // Reload on language switch to get translated AI insights
+            window.addEventListener('dw-lang-changed', () => {
+                window.location.reload();
+            });
+        });
+    </script>
+    <script src="chatbot.js"></script>
+</body>
+
+</html>

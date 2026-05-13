@@ -1,0 +1,70 @@
+{
+    "report_id": "be0968dc-9c3b-439e-afdf-b3976e1a3420",
+    "file_info": {
+        "file_id": "5b3fd10d",
+        "original_name": "features.csv",
+        "file_size_mb": 0.56,
+        "uploaded_at": "2026-05-01T23:45:38.347720"
+    },
+    "analysis_count": 3,
+    "generated_at": "2026-05-02T02:47:07.086791",
+    "analyses": [
+        {
+            "analysis_id": 172,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-01T23:45:43.840426",
+            "summary": {
+                "total_rows": 8190,
+                "total_columns": 12,
+                "quality_score": 75.54,
+                "warnings": [
+                    "High variance detected in 'MarkDown1'",
+                    "High variance detected in 'MarkDown2'",
+                    "High variance detected in 'MarkDown3'",
+                    "High variance detected in 'MarkDown4'",
+                    "High variance detected in 'MarkDown5'",
+                    "High variance detected in 'IsHoliday'",
+                    "Moderate data quality"
+                ],
+                "insights": []
+            }
+        },
+        {
+            "analysis_id": 171,
+            "analysis_type": "basic",
+            "status": "completed",
+            "date_time": "2026-05-01T23:45:43.588154",
+            "summary": {
+                "total_rows": 0,
+                "total_columns": 0,
+                "quality_score": 0,
+                "warnings": [
+                    "Low data quality"
+                ],
+                "insights": []
+            }
+        },
+        {
+            "analysis_id": 170,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-01T23:45:43.470777",
+            "summary": {
+                "total_rows": 8190,
+                "total_columns": 12,
+                "quality_score": 75.54,
+                "warnings": [
+                    "High variance detected in 'MarkDown1'",
+                    "High variance detected in 'MarkDown2'",
+                    "High variance detected in 'MarkDown3'",
+                    "High variance detected in 'MarkDown4'",
+                    "High variance detected in 'MarkDown5'",
+                    "High variance detected in 'IsHoliday'",
+                    "Moderate data quality"
+                ],
+                "insights": []
+            }
+        }
+    ]
+}

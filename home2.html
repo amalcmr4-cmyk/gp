@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataWizard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <link rel="stylesheet" href="home2.css">
+    <link rel="stylesheet" href="chatbot.css">
+    <script src="i18n.js"></script>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <button class="close-btn" id="closeSidebar">×</button>
+            <h2>DataWizard</h2>
+        </div>
+
+        <button class="new-chat-btn">
+            <i class="fas fa-plus"></i> <span data-i18n="newChat">New Chat</span>
+        </button>
+
+        <div class="sidebar-nav">
+            <div class="nav-item active">
+                <i class="fas fa-upload"></i><a href="#toUpload" data-i18n="uploadNew">Upload New Data</a>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-comment-dots"></i><a href="#section2" id="SBDB" data-i18n="dashboard">Dashboard</a>
+            </div>
+            <div class="nav-item"><i class="fas fa-chart-line"></i>
+                <a href="analysisP.html" data-i18n="analysis">Analysis</a>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-history"></i><a href="history.html" data-i18n="history">History</a>
+            </div>
+
+
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="nav-item">
+                <i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-shield-alt"></i> <span data-i18n="terms">Terms & Policies</span>
+            </div>
+            <div class="copyright">
+                © 2026 DataWizard
+            </div>
+        </div>
+    </aside>
+
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="logo">
+            <button class="menu-toggle" id="openSidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            <img src="images/logoIcon.PNG" alt="logo">
+            <h1>DataWizard</h1>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="signup.html"><button class="btn primary" data-i18n="signUp">Sign Up</button></a>
+            <a href="login.html"><button class="btn" data-i18n="logIn">Log In</button></a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content">
+        <section id="section1">
+            <div class="hero">
+                <h1><span data-i18n="heroTry">Try</span> <span>DataWizard</span></h1>
+                <p class="subtitle" data-i18n="heroSubtitle">and uncover the hidden magic in your data in seconds</p>
+            </div>
+            <p id="toUpload"></p>
+            <div class="upload-zone" id="uploadZone">
+                <div class="upload-diplay" id="uploadDisplay">
+                    <input type="file" id="file-input" accept=".csv,.xlsx,.xls">
+                    <div class="icon-circle">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <h3 data-i18n="uploadTitle">Upload your data file here</h3>
+                    <p data-i18n="uploadDesc">We support CSV and Excel files</p>
+                </div>
+                <div id="file-preview" style="display: none; margin: 1.2rem 0;">
+                    <i id="file-icon" class="fas fa-file" style="font-size: 2.8rem; color: var(--accent);"></i>
+                    <p id="file-name-display"
+                        style="margin-top: 0.5rem; color: #d4c2ff; font-size: 0.95rem; font-weight: 500;">
+                        <span data-i18n="noFileSelected">No file selected</span>
+                    </p>
+                </div>
+
+
+                <button id="analyzeBtn" class="btn primary"
+                    style="margin-top: 1.5rem; width: auto; padding: 0.9rem 2rem; display: none;">
+                    <i class="fas fa-chart-bar"></i> <span data-i18n="startAnalysis">start analysis now</span>
+                </button>
+            </div>
+
+            <div class="steps-grid">
+                <div class="glass-card">
+                    <div class="step-number">1</div>
+                    <h3 data-i18n="step1Title">Secure Upload</h3>
+                    <p data-i18n="step1Desc">Your data is processed in memory and encrypted. We never train our models on your private data.</p>
+                </div>
+
+                <div class="glass-card">
+                    <div class="step-number"><i class="fa-solid fa-wand-sparkles"></i></div>
+                    <h3 data-i18n="step2Title">AI-Powered Analysis</h3>
+                    <p data-i18n="step2Desc">Our advanced AI instantly detects patterns, anomalies, and correlations you might have missed.</p>
+                    <a href="#toUpload" data-i18n="step2Link">Start analysis now</a>
+                </div>
+
+                <div class="glass-card">
+                    <div class="step-number">3</div>
+                    <h3 data-i18n="step3Title">Actionable Insights</h3>
+                    <p data-i18n="step3Desc">Beautifully rendered visualizations and clear, strategic recommendations ready for your presentation.</p>
+
+                </div>
+            </div>
+
+        </section>
+        <!-- Dashboard placeholder removed for presentation -->
+    </main>
+    <footer class="page-footer">
+        <div class="footer-content">
+            <div class="security-badges">
+                <div class="security-item">
+                    <i class="fas fa-lock"></i>
+                    <span data-i18n="encryption">256-bit Encryption</span>
+                </div>
+                <div class="security-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span data-i18n="dataNotStored">Data Never Stored</span>
+                </div>
+                <div class="security-item">
+                    <i class="fas fa-user-shield"></i>
+                    <span data-i18n="gdpr">GDPR Compliant</span>
+                </div>
+            </div>
+
+            <div class="footer-extra">
+                <p data-i18n="footerRights">© 2026 DataWizard – All rights reserved.</p>
+                <p data-i18n="footerPrivacy">Your data privacy & security is our top priority</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Toast Notification -->
+    <div id="toastBox"></div>
+
+    <!-- Custom File Name Modal -->
+    <div id="filenameModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:rgba(30,20,60,0.95); padding:2rem; border-radius:15px; border:1px solid #9f7aea; text-align:center; width:90%; max-width:400px;">
+            <h3 style="margin-bottom:1rem; color:#fff;" data-i18n="saveAs">Save Analysis As</h3>
+            <p style="color:#d4c2ff; margin-bottom:1rem; font-size:0.9rem;" data-i18n="whatName">What would you like to name this report?</p>
+            <input type="text" id="customFileNameInput" data-i18n-placeholder="enterFileName" placeholder="Enter file name..." style="width:100%; padding:10px; margin-bottom:1.5rem; border-radius:8px; border:1px solid #7e57c2; background:rgba(0,0,0,0.2); color:#fff; font-family:'Tajawal', sans-serif;">
+            <button id="saveFileNameBtn" class="btn primary" style="width:100%;" data-i18n="continueToAnalysis">Continue to Analysis</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const fileInput = document.getElementById("file-input");
+            const uploadZone = document.getElementById("uploadZone");
+            const analyzeBtn = document.getElementById("analyzeBtn");
+            const section2 = document.getElementById("section2");
+            const SBDB = document.getElementById("SBDB");
+
+            let selectedFile = null;
+
+            function handleFileSelected(file) {
+                selectedFile = file;
+                const preview = document.getElementById("file-preview");
+                const fileIcon = document.getElementById("file-icon");
+                const fileNameDisplay = document.getElementById("file-name-display");
+                const uploadDisplay = document.getElementById("uploadDisplay");
+                const analyzeBtn = document.getElementById("analyzeBtn");
+
+                if (file) {
+                    const sizeKB = (file.size / 1024).toFixed(1);
+
+
+                    fileNameDisplay.innerHTML = `<strong>${file.name}</strong> (${sizeKB} KB)`;
+
+
+                    let iconClass = "fas fa-file";
+                    const ext = file.name.split('.').pop().toLowerCase();
+
+                    if (ext === 'csv') iconClass = "fas fa-file-csv";
+                    else if (['xlsx', 'xls', 'xlsm'].includes(ext)) iconClass = "fas fa-file-excel";
+                    else if (ext === 'pdf') iconClass = "fas fa-file-pdf";
+
+                    fileIcon.className = iconClass;
+
+                    uploadDisplay.style.display = "none";
+                    preview.style.display = "block";
+                    analyzeBtn.style.display = "inline-block";
+
+                    uploadZone.style.borderColor = "#9f7aea";
+                    uploadZone.classList.add("upload-success");
+                }
+                else {
+                    fileNameDisplay.textContent = "No file selected";
+                    fileIcon.className = "fas fa-file";
+
+                    uploadDisplay.style.display = "block";
+                    preview.style.display = "none";
+                    analyzeBtn.style.display = "none";
+
+                    uploadZone.style.borderColor = "#7e57c2";
+                    uploadZone.classList.remove("upload-success");
+                }
+            }
+            function showToast(msg, type = 'info') {
+                const toastBox = document.getElementById("toastBox");
+                const toast = document.createElement("div");
+                toast.className = `toast toast-${type}`;
+                toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i> ${msg}`;
+                toastBox.appendChild(toast);
+                setTimeout(() => { toast.remove(); }, 3500);
+            }
+
+            async function uploadFile() {
+                if (!selectedFile) {
+                    showToast(t('selectFileFirst'), "error");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("file", selectedFile);
+
+                analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + t('uploading');
+                analyzeBtn.disabled = true;
+
+                try {
+                    const response = await fetch('http://localhost:8000/upload/uploadfile/', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail || "File upload failed");
+                    }
+
+                    const data = await response.json();
+                    console.log("Upload Success:", data);
+                    localStorage.setItem("last_file_id", data.id);
+                    
+                    showToast(t('uploadSuccess'), "success");
+                    
+                    // Show custom name modal
+                    document.getElementById('customFileNameInput').value = selectedFile.name;
+                    document.getElementById('filenameModal').style.display = 'flex';
+                    
+                    document.getElementById('saveFileNameBtn').onclick = () => {
+                        const newName = document.getElementById('customFileNameInput').value.trim() || selectedFile.name;
+                        localStorage.setItem('custom_name_' + data.id, newName);
+                        document.getElementById('saveFileNameBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                        setTimeout(() => {
+                            window.location.href = `analysisP.html?id=${data.id}`;
+                        }, 500);
+                    };
+
+                } catch (error) {
+                    console.error("Upload error:", error);
+                    showToast(t('uploadError') + error.message, "error");
+                } finally {
+                    analyzeBtn.innerHTML = t('startAnalysisBtn');
+                    analyzeBtn.disabled = false;
+                }
+            }
+
+            fileInput.addEventListener("change", function () {
+                handleFileSelected(this.files[0]);
+            });
+
+            // Drag & Drop
+            uploadZone.addEventListener("dragover", function (e) {
+                e.preventDefault();
+                uploadZone.classList.add("drag-over");
+            });
+
+            uploadZone.addEventListener("dragleave", function (e) {
+                e.preventDefault();
+                uploadZone.classList.remove("drag-over");
+            });
+
+            uploadZone.addEventListener("drop", function (e) {
+                e.preventDefault();
+                uploadZone.classList.remove("drag-over");
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    handleFileSelected(files[0]);
+                }
+            });
+
+            uploadZone.addEventListener("click", function (e) {
+                if (e.target.tagName !== "INPUT") {
+                    fileInput.click();
+                }
+            });
+
+            if (analyzeBtn || SBDB) {
+                analyzeBtn.addEventListener("click", function () {
+                    if (selectedFile) {
+                        uploadFile();
+                    } else {
+                        showToast(t('selectFileFirst'), "error");
+                    }
+                });
+                SBDB.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    showToast(t('dashboardToast'), "info");
+                    document.getElementById("uploadZone").scrollIntoView({ behavior: 'smooth' });
+                });
+            }
+            
+
+            // Sidebar toggle 
+            const sidebar = document.getElementById('sidebar');
+            const openBtn = document.getElementById('openSidebar');
+            const closeBtn = document.getElementById('closeSidebar');
+
+            openBtn.addEventListener('click', () => {
+                sidebar.classList.add('open');
+            });
+
+            closeBtn.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target) && !openBtn.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        });
+    </script>
+    <script src="chatbot.js"></script>
+</body>
+</html>

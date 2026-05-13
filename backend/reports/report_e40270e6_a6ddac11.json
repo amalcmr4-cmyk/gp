@@ -1,0 +1,160 @@
+{
+    "report_id": "a6ddac11-ce84-40de-b4cc-212d2188efa7",
+    "file_info": {
+        "file_id": "e40270e6",
+        "original_name": "train.csv",
+        "file_size_mb": 2.03,
+        "uploaded_at": "2026-05-07T22:04:29.622217"
+    },
+    "analysis_count": 9,
+    "generated_at": "2026-05-08T20:37:08.650265",
+    "analyses": [
+        {
+            "analysis_id": 271,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-07T22:11:11.240085",
+            "summary": {
+                "total_rows": 9800,
+                "total_columns": 18,
+                "quality_score": 99.99,
+                "warnings": [
+                    "High variance detected in 'Sales'"
+                ],
+                "insights": [
+                    "Excellent data quality"
+                ]
+            }
+        },
+        {
+            "analysis_id": 270,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-07T22:11:07.928653",
+            "summary": {
+                "total_rows": 9800,
+                "total_columns": 18,
+                "quality_score": 99.99,
+                "warnings": [
+                    "High variance detected in 'Sales'"
+                ],
+                "insights": [
+                    "Excellent data quality"
+                ]
+            }
+        },
+        {
+            "analysis_id": 269,
+            "analysis_type": "basic",
+            "status": "completed",
+            "date_time": "2026-05-07T22:11:03.520019",
+            "summary": {
+                "total_rows": 0,
+                "total_columns": 0,
+                "quality_score": 0,
+                "warnings": [
+                    "Low data quality"
+                ],
+                "insights": []
+            }
+        },
+        {
+            "analysis_id": 268,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-07T22:10:28.443956",
+            "summary": {
+                "total_rows": 9800,
+                "total_columns": 18,
+                "quality_score": 99.99,
+                "warnings": [
+                    "High variance detected in 'Sales'"
+                ],
+                "insights": [
+                    "Excellent data quality"
+                ]
+            }
+        },
+        {
+            "analysis_id": 267,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-07T22:10:23.635332",
+            "summary": {
+                "total_rows": 9800,
+                "total_columns": 18,
+                "quality_score": 99.99,
+                "warnings": [
+                    "High variance detected in 'Sales'"
+                ],
+                "insights": [
+                    "Excellent data quality"
+                ]
+            }
+        },
+        {
+            "analysis_id": 266,
+            "analysis_type": "basic",
+            "status": "completed",
+            "date_time": "2026-05-07T22:10:18.501687",
+            "summary": {
+                "total_rows": 0,
+                "total_columns": 0,
+                "quality_score": 0,
+                "warnings": [
+                    "Low data quality"
+                ],
+                "insights": []
+            }
+        },
+        {
+            "analysis_id": 265,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-07T22:05:00.629465",
+            "summary": {
+                "total_rows": 9800,
+                "total_columns": 18,
+                "quality_score": 99.99,
+                "warnings": [
+                    "High variance detected in 'Sales'"
+                ],
+                "insights": [
+                    "Excellent data quality"
+                ]
+            }
+        },
+        {
+            "analysis_id": 264,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-07T22:04:41.180532",
+            "summary": {
+                "total_rows": 9800,
+                "total_columns": 18,
+                "quality_score": 99.99,
+                "warnings": [
+                    "High variance detected in 'Sales'"
+                ],
+                "insights": [
+                    "Excellent data quality"
+                ]
+            }
+        },
+        {
+            "analysis_id": 263,
+            "analysis_type": "basic",
+            "status": "completed",
+            "date_time": "2026-05-07T22:04:38.673295",
+            "summary": {
+                "total_rows": 0,
+                "total_columns": 0,
+                "quality_score": 0,
+                "warnings": [
+                    "Low data quality"
+                ],
+                "insights": []
+            }
+        }
+    ]
+}
