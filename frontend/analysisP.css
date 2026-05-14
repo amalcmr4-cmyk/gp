@@ -135,21 +135,23 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: .55rem 1rem;
-    font-size: .9rem;
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+    color:var(--primary);
     font-weight: 700;
     border-radius: 20px;
     cursor: pointer;
-    transition: all .25s;
-    border: 1px solid rgba(200, 170, 37, .5);
-    color: var(--accent-glow);
-    background: rgba(200, 170, 37, .12);
+    transition: all 0.25s;
+    border: 1px solid rgba(129, 110, 24, 0.5);
+    
+    background: rgba(151, 128, 28, 0.12);
     font-family: 'Tajawal', sans-serif;
+    white-space: nowrap;
 }
 
 .lang-toggle:hover {
-    background: rgba(200, 170, 37, .25);
-    border-color: var(--accent-glow);
+    background: rgba(78, 67, 15, 0.25);
+    transform: scale(1.05);
 }
 
 /* ===== SIDEBAR ===== */

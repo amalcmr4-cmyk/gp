@@ -309,7 +309,13 @@
             });
 
             uploadZone.addEventListener("click", function (e) {
-                if (e.target.tagName !== "INPUT") {
+                // Only open file dialog if no file selected and not clicking the analyze button or the preview area
+                if (
+                    !selectedFile &&
+                    e.target.tagName !== "INPUT" &&
+                    !e.target.closest('#analyzeBtn') &&
+                    !e.target.closest('#file-preview')
+                ) {
                     fileInput.click();
                 }
             });

@@ -17,9 +17,9 @@ def clean_data_service(file_id: str, action: str, db: Session):
     
     try:
         if file_path.endswith('.csv'):
-            df = pd.read_csv(file_path)
+            df = pd.read_csv(file_path,encoding='latin1')
         elif file_path.endswith('.xlsx') or file_path.endswith('.xls'):
-            df = pd.read_excel(file_path)
+            df = pd.read_excel(file_path,encoding='latin1')
         else:
             raise HTTPException(status_code=400, detail="Unsupported file format")
             

@@ -29,9 +29,9 @@ async def analyze_file_service(file_id: str, db):
     #read data in file
     try:
         if file_found.endswith('.csv'):
-            df = pd.read_csv(file_path)
+            df = pd.read_csv(file_path,encoding='latin1')
         elif file_found.endswith(('.xlsx', '.xls')):
-            df = pd.read_excel(file_path)
+            df = pd.read_excel(file_path,encoding='latin1')
         else:
             raise HTTPException(400, "File type not supported")
     except Exception as e:
@@ -76,9 +76,9 @@ async def advanced_analysis_service(file_id: str, db):
     #read file
     try:
         if file_found.endswith('.csv'):
-            df = pd.read_csv(file_path)
+            df = pd.read_csv(file_path,encoding='latin1')
         elif file_found.endswith(('.xlsx', '.xls')):
-            df = pd.read_excel(file_path)
+            df = pd.read_excel(file_path,encoding='latin1')
     except Exception as e:
         raise HTTPException(500, f"Error reading file: {str(e)}")
 
