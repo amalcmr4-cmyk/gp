@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataWizard - History</title>
+    <meta name="description" content="DataWizard – View your past analysis sessions and revisit insights.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="history.css">
+    <link rel="stylesheet" href="chatbot.css">
+    <script src="i18n.js"></script>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <button class="close-btn" id="closeSidebar">×</button>
+            <h2>DataWizard</h2>
+        </div>
+        <button class="new-chat-btn" onclick="window.location.href='home2.html'">
+            <i class="fas fa-plus"></i> <span data-i18n="newChat">New Chat</span>
+        </button>
+        <div class="sidebar-nav">
+            <div class="nav-item">
+                <i class="fas fa-upload"></i><a href="home2.html#toUpload" data-i18n="uploadNew">Upload New Data</a>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-chart-line"></i><a href="analysisP.html" data-i18n="analysis">Analysis</a>
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-history"></i><a href="history.html" data-i18n="history">History</a>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <div class="nav-item"><i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span></div>
+            <div class="nav-item"><i class="fas fa-shield-alt"></i> <span data-i18n="terms">Terms & Policies</span>
+            </div>
+            <div class="copyright">© 2026 DataWizard</div>
+        </div>
+    </aside>
+
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="logo">
+            <button class="menu-toggle" id="openSidebar"><i class="fas fa-bars"></i></button>
+            <img src="../images/logoIcon.PNG" alt="logo">
+            <h1>DataWizard</h1>
+        </div>
+        <div class="nav-buttons">
+            <a href="home2.html"><button class="btn primary" data-i18n="newAnalysis">New Analysis</button></a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content">
+        <div class="page-header">
+            <div class="page-title-row">
+                <div>
+                    <h2><i class="fas fa-clock-rotate-left"></i> <span data-i18n="historyTitle">Analysis History</span>
+                    </h2>
+                    <p class="page-subtitle" data-i18n="historySubtitle">Your recent analysis sessions (stored locally)
+                    </p>
+                </div>
+                <button class="btn clear-all-btn" id="clearAllBtn" onclick="clearAllHistory()" style="display:none;">
+                    <i class="fas fa-trash-alt"></i> <span data-i18n="clearAll">Clear All</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- History Grid -->
+        <div id="history-grid" class="history-grid"></div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="empty-state" style="display:none;">
+            <div class="empty-icon"><i class="fas fa-inbox"></i></div>
+            <h3 data-i18n="noHistory">No Analysis History</h3>
+            <p data-i18n="noHistoryDesc">You haven't analyzed any files yet. Upload a file to get started!</p>
+            <a href="home2.html#toUpload"><button class="btn primary"><i class="fas fa-upload"></i> <span
+                        data-i18n="uploadNow">Upload Now</span></button></a>
+        </div>
+    </main>
+
+    <!-- Confirm Modal -->
+    <div id="confirm-modal" class="modal-overlay" style="display:none;" onclick="closeConfirm(event)">
+        <div class="confirm-card">
+            <div class="confirm-icon"><i class="fas fa-trash-alt"></i></div>
+            <h3 id="confirm-title">Delete this record?</h3>
+            <p id="confirm-desc">This action cannot be undone.</p>
+            <div class="confirm-actions">
+                <button class="btn" onclick="closeConfirm()" data-i18n="cancel">Cancel</button>
+
+                <button class="btn danger" id="confirm-yes-btn" data-i18n="deleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="page-footer">
+        <p data-i18n="footerBiz">© 2026 DataWizard – Business Analytics Platform</p>
+    </footer>
+
+    <script>
+        // History
+        function getHistory() {
+            return JSON.parse(localStorage.getItem('dw-history') || '[]');
+        }
+
+        function renderHistory() {
+            const data = getHistory();
+            const grid = document.getElementById('history-grid');
+            const empty = document.getElementById('empty-state');
+            const clearBtn = document.getElementById('clearAllBtn');
+
+            if (!data.length) {
+                grid.style.display = 'none';
+                empty.style.display = 'flex';
+                clearBtn.style.display = 'none';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            empty.style.display = 'none';
+            clearBtn.style.display = 'inline-flex';
+
+            grid.innerHTML = data.map((item, idx) => {
+                const d = new Date(item.date);
+                const locale = getCurrentLang() === 'ar' ? 'ar-SA' : 'en-US';
+                const dateStr = d.toLocaleDateString(locale, {
+                    year: 'numeric', month: 'short', day: 'numeric'
+                });
+                const timeStr = d.toLocaleTimeString(locale, {
+                    hour: '2-digit', minute: '2-digit'
+                });
+                const ext = (item.filename || '').split('.').pop().toLowerCase();
+                let fileIcon = 'fa-file';
+                if (ext === 'csv') fileIcon = 'fa-file-csv';
+                else if (['xlsx', 'xls'].includes(ext)) fileIcon = 'fa-file-excel';
+
+                return `
+        <div class="history-card" style="animation-delay:${idx * 0.07}s">
+            <div class="history-card-header">
+                <div class="history-file-icon"><i class="fas ${fileIcon}"></i></div>
+                <div class="history-file-info">
+                    <h4 class="history-filename">${item.filename || 'Untitled'}</h4>
+                    <span class="history-date"><i class="far fa-clock"></i> ${dateStr} – ${timeStr}</span>
+                </div>
+            </div>
+            <div class="history-stats">
+                <div class="history-stat">
+                    <i class="fas fa-grip-horizontal" style="color:#60a5fa;"></i>
+                    <span>${item.rows ?? '—'} ${t('rows')}</span>
+                </div>
+                <div class="history-stat">
+                    <i class="fas fa-table-columns" style="color:#c084fc;"></i>
+                    <span>${item.cols ?? '—'} ${t('columns')}</span>
+                </div>
+            </div>
+            <div class="history-actions">
+                <a href="analysisP.html?id=${item.id}" class="btn primary history-open-btn">
+                    <i class="fas fa-arrow-up-right-from-square"></i> ${t('openAgain')}
+                </a>
+                <a href="report.html?id=${item.id}" class="btn history-open-btn" style="background:rgba(255,255,255,0.05); border:1px solid #9f7aea; color:#d4c2ff; transition:all 0.3s;">
+                    <i class="fas fa-file-invoice"></i> ${t('report')}
+                </a>
+                <button class="btn danger-outline history-delete-btn" onclick="confirmDelete(${idx})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>`;
+            }).join('');
+        }
+
+        let pendingDeleteIdx = null;
+        let pendingAction = null;
+
+        function confirmDelete(idx) {
+            pendingDeleteIdx = idx;
+            pendingAction = 'deleteOne';
+            document.getElementById('confirm-title').textContent = t('deleteRecord');
+            document.getElementById('confirm-desc').textContent = t('cannotUndo');
+            document.getElementById('confirm-modal').style.display = 'flex';
+            document.getElementById('confirm-yes-btn').onclick = doDelete;
+        }
+
+        function clearAllHistory() {
+            pendingAction = 'clearAll';
+            document.getElementById('confirm-title').textContent = t('deleteAll');
+            document.getElementById('confirm-desc').textContent = t('cannotUndo');
+            document.getElementById('confirm-modal').style.display = 'flex';
+            document.getElementById('confirm-yes-btn').onclick = doClearAll;
+        }
+
+        function doDelete() {
+            const h = getHistory();
+            if (pendingDeleteIdx !== null && pendingDeleteIdx < h.length) {
+                h.splice(pendingDeleteIdx, 1);
+                localStorage.setItem('dw-history', JSON.stringify(h));
+            }
+            closeConfirm();
+            renderHistory();
+        }
+
+        function doClearAll() {
+            localStorage.removeItem('dw-history');
+            closeConfirm();
+            renderHistory();
+        }
+
+        function closeConfirm(e) {
+            if (!e || e.target === document.getElementById('confirm-modal')) {
+                document.getElementById('confirm-modal').style.display = 'none';
+                pendingDeleteIdx = null;
+                pendingAction = null;
+            }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHistory();
+
+            const sidebar = document.getElementById('sidebar');
+            document.getElementById('openSidebar').addEventListener('click', () => sidebar.classList.add('open'));
+            document.getElementById('closeSidebar').addEventListener('click', () => sidebar.classList.remove('open'));
+            document.addEventListener('click', e => {
+                if (!sidebar.contains(e.target) && !document.getElementById('openSidebar').contains(e.target))
+                    sidebar.classList.remove('open');
+            });
+        });
+    </script>
+    <script src="chatbot.js"></script>
+</body>
+
+</html>

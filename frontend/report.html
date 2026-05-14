@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataWizard - Executive Report</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link rel="stylesheet" href="report.css">
+    <link rel="stylesheet" href="chatbot.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <script src="i18n.js"></script>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <button class="close-btn" id="closeSidebar" style="display:none;">×</button>
+            <h2>DataWizard</h2>
+        </div>
+        <button class="new-chat-btn" onclick="window.location.href='home2.html'">
+            <i class="fas fa-plus"></i> <span data-i18n="newUpload">New Upload</span>
+        </button>
+        <div class="sidebar-nav">
+            <div class="nav-item">
+                <i class="fas fa-upload"></i><a href="home2.html#toUpload" data-i18n="uploadData">Upload Data</a>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-history"></i><a href="history.html" data-i18n="history">History</a>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <div class="copyright">© 2026 DataWizard</div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Navbar -->
+        <header class="navbar">
+            <div class="nav-actions" style="margin-left: auto;">
+                <button class="export-btn" onclick="window.print()">
+                    <i class="fas fa-print"></i> <span data-i18n="printReport">Print Report</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Loader -->
+        <div id="loading" class="loading-overlay">
+            <div class="spinner"></div>
+            <h3 style="color:var(--primary);" data-i18n="loadingReport">Loading Executive Report...</h3>
+        </div>
+
+        <!-- Report Container -->
+        <div class="report-container" id="report-container" style="display:none;">
+            
+            <div class="report-header">
+                <div>
+                    <h1 data-i18n="execAudit">Executive Data Audit</h1>
+                    <div class="subtext" id="report-id-text">Report ID: Generating...</div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="subtext" data-i18n="generatedOn">Generated on</div>
+                    <strong style="color:var(--primary);" id="report-date">...</strong>
+                </div>
+            </div>
+
+            <!-- File Info Widget -->
+            <div class="file-info-bar">
+                <div class="info-item">
+                    <span data-i18n="fileNameLabel">File Name</span>
+                    <strong id="file-name">...</strong>
+                </div>
+                <div class="info-item">
+                    <span data-i18n="fileSize">File Size</span>
+                    <strong id="file-size">...</strong>
+                </div>
+                <div class="info-item">
+                    <span data-i18n="uploadedAt">Uploaded At</span>
+                    <strong id="file-uploaded">...</strong>
+                </div>
+                <div class="info-item">
+                    <span data-i18n="totalAnalyses">Total Analyses</span>
+                    <strong id="analysis-count">...</strong>
+                </div>
+            </div>
+
+            <!-- Grid Container for Analyses -->
+            <div id="analyses-wrapper">
+                <!-- Dynamically populated -->
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fileId = urlParams.get('id');
+            const loading = document.getElementById('loading');
+            const container = document.getElementById('report-container');
+
+            if (!fileId) {
+                loading.innerHTML = '<h3 style="color:#f87171;">Error: No file ID specified. Request a report through History.</h3>';
+                return;
+            }
+
+            try {
+                // Fetch the backend report endpoint
+                let response = await fetch(`http://127.0.0.1:8000/reports/${fileId}`);
+                
+                // Fallback for when backend hasn't been restarted and retains old double-prefix
+                if (response.status === 404) {
+                    const fallbackResponse = await fetch(`http://127.0.0.1:8000/reports/reports/${fileId}`);
+                    if (fallbackResponse.ok) response = fallbackResponse;
+                }
+
+                if (!response.ok) {
+                    let errMsg = `Status ${response.status}`;
+                    try {
+                        const errData = await response.json();
+                        errMsg = errData.detail || errMsg;
+                    } catch(e) {}
+                    throw new Error('Failed to generate or fetch report from server. ' + errMsg);
+                }
+                
+                const data = await response.json();
+                
+                // Set Header info
+                document.getElementById('report-id-text').textContent = t('reportId') + ': ' + (data.report_id || fileId);
+                const dt = new Date(data.generated_at);
+                document.getElementById('report-date').textContent = isNaN(dt) ? new Date().toLocaleDateString() : dt.toLocaleString();
+                
+                if (data.file_info) {
+                    document.getElementById('file-name').textContent = data.file_info.original_name || 'Unknown';
+                    document.getElementById('file-size').textContent = (data.file_info.file_size_mb || 0) + ' MB';
+                    document.getElementById('file-uploaded').textContent = new Date(data.file_info.uploaded_at).toLocaleDateString() || '...';
+                }
+                document.getElementById('analysis-count').textContent = data.analysis_count || data.analyses?.length || 0;
+
+                // Render Analyses Blocks
+                const wrapper = document.getElementById('analyses-wrapper');
+                let analysesHtml = '';
+
+                (data.analyses || []).forEach((analysis, idx) => {
+                    const summary = analysis.summary || {};
+                    const score = summary.quality_score || 0;
+                    
+                    let scoreClass = 'score-low';
+                    if (score >= 80) scoreClass = 'score-high';
+                    else if (score >= 50) scoreClass = 'score-med';
+
+                    let alertsHtml = '';
+                    
+                    // Warnings
+                    (summary.warnings || []).forEach(w => {
+                        alertsHtml += `
+                        <div class="alert-item alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>${w}</div>
+                        </div>`;
+                    });
+                    
+                    // Insights
+                    (summary.insights || []).forEach(i => {
+                        alertsHtml += `
+                        <div class="alert-item alert-insight">
+                            <i class="fas fa-lightbulb"></i>
+                            <div>${i}</div>
+                        </div>`;
+                    });
+
+                    if(!alertsHtml) alertsHtml = '<div style="color:#94a3b8; font-style:italic;">No prominent warnings or insights detected.</div>';
+
+                    analysesHtml += `
+                    <div class="analysis-block">
+                        <div class="analysis-header">
+                            <h3><i class="fas fa-microscope" style="color:var(--primary);"></i> ${t('analysisRun')} ${idx + 1} <span style="font-size:0.8rem; background:rgba(255,255,255,0.1); padding:0.2rem 0.5rem; border-radius:4px; margin-left:10px;">${analysis.analysis_type}</span></h3>
+                            <span style="color:#94a3b8; font-size:0.9rem;">${new Date(analysis.date_time).toLocaleString()}</span>
+                        </div>
+                        <div class="report-grid">
+                            <div class="quality-score-box">
+                                <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:0.5rem; text-transform:uppercase;">${t('dataQuality')}</div>
+                                <div class="quality-circle ${scoreClass}">${score}%</div>
+                                <div style="display:flex; gap:1rem; margin-top:1rem; color:#f8fafc;">
+                                    <div><i class="fas fa-bars" style="color:#94a3b8;"></i> ${summary.total_rows || 0} ${t('rowsLabel')}</div>
+                                    <div><i class="fas fa-columns" style="color:#94a3b8;"></i> ${summary.total_columns || 0} ${t('colsLabel')}</div>
+                                </div>
+                            </div>
+                            <div class="alerts-container">
+                                ${alertsHtml}
+                            </div>
+                        </div>
+                    </div>`;
+                });
+
+                if(!analysesHtml) analysesHtml = '<p style="color:#f87171;">No analyses were available to include in this report.</p>';
+                wrapper.innerHTML = analysesHtml;
+
+                // Done loading
+                loading.style.display = 'none';
+                container.style.display = 'block';
+
+            } catch (err) {
+                loading.innerHTML = `<h3 style="color:#f87171; text-align:center;"><i class="fas fa-exclamation-triangle"></i><br>Error Loading Report</h3><p style="color:#fca5a5; margin-top:1rem;">${err.message}</p>`;
+                console.error(err);
+            }
+        });
+    </script>
+    <script src="chatbot.js"></script>
+</body>
+</html>
