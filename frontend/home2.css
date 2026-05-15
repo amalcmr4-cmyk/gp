@@ -207,7 +207,8 @@ body {
 }
 
 .nav-item a {
-    color: rgba(255, 255, 255, 0.75);
+     color: rgba(255, 255, 255, .75);
+    text-decoration: none;
 }
 
 .nav-item:hover,

@@ -109,10 +109,8 @@
             }
 
             try {
-                // Fetch the backend report endpoint
                 let response = await fetch(`http://127.0.0.1:8000/reports/${fileId}`);
                 
-                // Fallback for when backend hasn't been restarted and retains old double-prefix
                 if (response.status === 404) {
                     const fallbackResponse = await fetch(`http://127.0.0.1:8000/reports/reports/${fileId}`);
                     if (fallbackResponse.ok) response = fallbackResponse;

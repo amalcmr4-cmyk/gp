@@ -26,10 +26,10 @@ body {
     color: var(--text-main);
     min-height: 100vh;
     display: flex;
+    padding-top:10px;
     overflow-x: hidden;
 }
 
-/* Base Layout matching others */
 .sidebar {
     width: 250px;
     background: var(--glass-bg);

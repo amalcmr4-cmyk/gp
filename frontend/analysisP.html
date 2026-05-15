@@ -41,7 +41,8 @@
         </div>
         <div class="sidebar-footer">
             <div class="nav-item"><i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span></div>
-            <div class="nav-item"><i class="fas fa-shield-alt"></i> <span data-i18n="terms">Terms & Policies</span>
+            <div class="nav-item">
+                <i class="fas fa-shield-alt"></i> <a href="terms.html" data-i18n="terms">Terms & Policies</a>
             </div>
             <div class="copyright">© 2026 DataWizard</div>
         </div>
@@ -164,6 +165,11 @@
 
         <!-- ===== BASIC VIEW ===== -->
         <div id="view-basic" class="analysis-view">
+            <!-- Column Analysis -->
+            <div class="glass-card pro-column-card" id="column-analysis-card">
+                <h3><i class="fas fa-columns"></i> <span data-i18n="columnAnalysis">Column Analysis Details</span></h3>
+                <div class="details-section" id="column-analysis-content"></div>
+            </div>
             <div class="data-table-container">
                 <div class="table-toolbar">
                     <h3><i class="fas fa-table"></i> <span data-i18n="dataPreview">Data Preview</span></h3>
@@ -203,11 +209,7 @@
         <div id="view-advanced" class="analysis-view" style="display:none;">
 
 
-            <!-- Column Analysis -->
-            <div class="glass-card pro-column-card" id="column-analysis-card">
-                <h3><i class="fas fa-columns"></i> <span data-i18n="columnAnalysis">Column Analysis Details</span></h3>
-                <div class="details-section" id="column-analysis-content"></div>
-            </div>
+            
 
             <div class="two-column-layout">
                 <!-- Numeric Statistics (Accordion) -->

@@ -72,6 +72,9 @@
         signUpSubtitle:  { en: "Let's get started with your 30 days free trial", ar: 'لنبدأ مع فترتك التجريبية المجانية لمدة 30 يوم' },
         name:            { en: 'Name',                 ar: 'الاسم' },
         namePlaceholder: { en: 'Enter your name',      ar: 'أدخل اسمك' },
+        passConditions1: {en: 'At least 8 letters', ar:"على الأقل 8 احرف"},
+        passConditions2: {en: 'Contain capital letter', ar:" يحتوي على حرف كبير"},
+        passConditions3: {en: 'Contain small letter', ar:" يحتوي على حرف صغير"},
         signUpBtn:       { en: 'Sign Up',              ar: 'إنشاء حساب' },
         alreadyAccount:  { en: 'Already have an account?', ar: 'لديك حساب بالفعل؟' },
         logInLink:       { en: 'Log In',               ar: 'تسجيل الدخول' },
@@ -80,6 +83,7 @@
         andWord:         { en: 'and',                  ar: 'و' },
         privacyPolicy:   { en: 'Privacy Policy',       ar: 'سياسة الخصوصية' },
         creatingAccount: { en: 'Creating Account...',   ar: 'جارٍ إنشاء الحساب...' },
+
 
         // ── History Page ──
         historyTitle:    { en: 'Analysis History',     ar: 'سجل التحليلات' },
