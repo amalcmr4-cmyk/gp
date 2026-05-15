@@ -1549,6 +1549,165 @@ body {
     }
 }
 
+/* ===== INSIGHTS HEADER ROW ===== */
+.insights-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.insights-header-row h2 {
+    margin-bottom: 0;
+}
+
+/* ===== TRANSLATE INSIGHTS BUTTON ===== */
+.translate-insights-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.6rem 1.3rem;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #6a1b9a, #8e2de2);
+    border: 1px solid rgba(250, 227, 121, .35);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(.4, 0, .2, 1);
+    font-family: 'Tajawal', sans-serif;
+    box-shadow: 0 4px 15px rgba(142, 45, 226, .3);
+    white-space: nowrap;
+}
+
+.translate-insights-btn i {
+    font-size: 1.15rem;
+    color: var(--accent-glow);
+}
+
+.translate-insights-btn:hover {
+    background: linear-gradient(135deg, #8e2de2, #ab47bc);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(142, 45, 226, .5);
+    border-color: var(--accent-glow);
+}
+
+.translate-insights-btn:disabled {
+    opacity: 0.7;
+    cursor: wait;
+    transform: none;
+}
+
+/* ===== INSIGHTS LEGEND ===== */
+.insights-legend {
+    margin-top: 2rem;
+    padding: 1.8rem;
+    background: rgba(20, 10, 40, .4);
+    border: 1px solid rgba(140, 80, 220, .2);
+    border-radius: 14px;
+    backdrop-filter: blur(12px);
+}
+
+.insights-legend h4 {
+    color: var(--accent-glow);
+    font-size: 1.15rem;
+    margin-bottom: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.insights-legend h4 i {
+    color: #c084fc;
+}
+
+.legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 1rem 1.2rem;
+    background: rgba(255, 255, 255, .03);
+    border: 1px solid rgba(140, 80, 220, .15);
+    border-radius: 12px;
+    transition: all 0.25s ease;
+}
+
+.legend-item:hover {
+    background: rgba(142, 45, 226, .08);
+    border-color: rgba(140, 80, 220, .3);
+}
+
+.legend-dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    border-radius: 50%;
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+.legend-dot.green-dot {
+    background: #4ade80;
+    box-shadow: 0 0 8px rgba(74, 222, 128, .6);
+}
+
+.legend-dot.red-dot {
+    background: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, .6);
+}
+
+.legend-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.legend-badge.high-badge {
+    background: rgba(74, 222, 128, .15);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, .3);
+}
+
+.legend-badge.medium-badge {
+    background: rgba(251, 191, 36, .15);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, .3);
+}
+
+.legend-badge.low-badge {
+    background: rgba(248, 113, 113, .15);
+    color: #f87171;
+    border: 1px solid rgba(248, 113, 113, .3);
+}
+
+.legend-text strong {
+    display: block;
+    color: #f3e8ff;
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+}
+
+.legend-text p {
+    color: #c9bcf5;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
 /* ===== CORRELATION TWO-COLUMN ===== */
 .two-column-layout {
     display: grid;
@@ -1686,6 +1845,15 @@ body {
     flex-direction: row-reverse;
 }
 
+[dir="rtl"] .insights-header-row {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .legend-item {
+    flex-direction: row-reverse;
+    text-align: right;
+}
+
 /* ===== CHART EXPLANATION ===== */
 .chart-explanation {
     margin-top: 15px;
@@ -1713,6 +1881,7 @@ body {
     .page-footer,
     .export-csv-btn,
     .lang-toggle,
+    .translate-insights-btn,
     #saveReportBtn {
         display: none !important;
     }

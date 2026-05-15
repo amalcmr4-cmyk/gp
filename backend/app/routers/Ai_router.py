@@ -3,10 +3,28 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from pydantic import BaseModel
 from typing import List, Dict, Optional
-from app.services.Ai_service import get_business_insights, process_chat_message
+from app.services.Ai_service import get_business_insights, process_chat_message, translate_texts
 from app.services.chatbot_service import process_gemini_chat
 
 router = APIRouter()
+
+
+# ─── Translate existing insight texts (no re-analysis) ───
+class TranslateRequest(BaseModel):
+    texts: Dict[str, str]
+    target_lang: str = "ar"
+
+@router.post("/translate")
+async def translate_insights_text(request: TranslateRequest):
+    """Translate existing insight card texts to another language.
+    Does NOT re-run the AI analysis — just translates the current text."""
+    try:
+        result = await translate_texts(request.texts, request.target_lang)
+        # Always return the result — frontend checks for result.error vs result.translated
+        return result
+    except Exception as e:
+        print(f"Translation endpoint error: {str(e)}")
+        return {"error": f"Server error: {str(e)}"}
 
 
 @router.get("/insights/{file_id}")

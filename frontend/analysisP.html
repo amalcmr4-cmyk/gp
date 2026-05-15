@@ -239,7 +239,12 @@
 
             <!-- AI Business Insights -->
             <div class="insights-box" style="margin-top:2rem;">
-                <h2><i class="fas fa-brain"></i> <span data-i18n="aiInsights">AI Business Insights</span></h2>
+                <div class="insights-header-row">
+                    <h2><i class="fas fa-brain"></i> <span data-i18n="aiInsights">AI Business Insights</span></h2>
+                    <button class="translate-insights-btn" id="translateInsightsBtn" onclick="translateInsightsOnly()">
+                        <i class="fas fa-language"></i> <span data-i18n="translateInsights">Translate to Arabic</span>
+                    </button>
+                </div>
                 <div class="ai-grid">
 
                     <div class="ai-insight-card">
@@ -354,6 +359,48 @@
                         <div id="ai-chart-sugg" class="ai-insight-text">Generating...</div>
                     </div>
 
+                </div>
+
+                <!-- Legend Section -->
+                <div class="insights-legend" id="insights-legend">
+                    <h4><i class="fas fa-info-circle"></i> <span data-i18n="legendTitle">Understanding the Indicators</span></h4>
+                    <div class="legend-grid">
+                        <div class="legend-item">
+                            <span class="legend-dot green-dot"></span>
+                            <div class="legend-text">
+                                <strong data-i18n="legendGreenDot">Green Dot</strong>
+                                <p data-i18n="legendGreenDotDesc">Indicates a positive or stable metric. The insight in this card reflects normal or healthy business performance.</p>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot red-dot"></span>
+                            <div class="legend-text">
+                                <strong data-i18n="legendRedDot">Red Dot</strong>
+                                <p data-i18n="legendRedDotDesc">Indicates a risk or warning. The insight in this card highlights potential issues or negative trends that require attention.</p>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-badge high-badge">High</span>
+                            <div class="legend-text">
+                                <strong data-i18n="legendHigh">High Confidence</strong>
+                                <p data-i18n="legendHighDesc">The AI generated a detailed and comprehensive insight with strong data support. The analysis is thorough and reliable.</p>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-badge medium-badge">Medium</span>
+                            <div class="legend-text">
+                                <strong data-i18n="legendMedium">Medium Confidence</strong>
+                                <p data-i18n="legendMediumDesc">The AI provided a moderate-length insight. The data may be partially available or the pattern is not fully clear.</p>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-badge low-badge">Low</span>
+                            <div class="legend-text">
+                                <strong data-i18n="legendLow">Low Confidence</strong>
+                                <p data-i18n="legendLowDesc">The AI generated a brief or limited insight. The available data may be insufficient for a detailed analysis.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1109,6 +1156,113 @@
                 window.location.reload();
             });
         });
+
+        // ============================================================
+        // Translate Insights Only (without full reload)
+        // ============================================================
+        let insightsLang = 'original'; // 'original' or 'translated'
+        let originalTexts = {};       // Store original card texts for toggling back
+
+        // Card IDs mapped to keys for the translate API
+        const insightCardIds = [
+            'ai-summary', 'ai-pricing', 'ai-growth', 'ai-customer',
+            'ai-risk', 'ai-global', 'ai-forecast', 'ai-chart-sugg'
+        ];
+
+        // Initialize translate button label based on current page language
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('translateInsightsBtn');
+            if (btn) {
+                const btnText = btn.querySelector('span');
+                const lang = getCurrentLang();
+                btnText.textContent = lang === 'ar' ? 'Translate to English' : 'ترجمة إلى العربية';
+            }
+        });
+
+        async function translateInsightsOnly() {
+            const btn = document.getElementById('translateInsightsBtn');
+            const btnIcon = btn.querySelector('i');
+            const btnText = btn.querySelector('span');
+            const pageLang = getCurrentLang();
+
+            // If already translated, toggle back to original without API call
+            if (insightsLang === 'translated' && Object.keys(originalTexts).length) {
+                insightCardIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && originalTexts[id]) {
+                        el.innerHTML = formatBullets(originalTexts[id]);
+                    }
+                });
+                insightsLang = 'original';
+                document.querySelectorAll('.ai-insight-text').forEach(el => el.style.direction = '');
+                btnText.textContent = pageLang === 'ar' ? 'Translate to English' : 'ترجمة إلى العربية';
+                return;
+            }
+
+            // Collect current text from each card
+            const texts = {};
+            insightCardIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const raw = el.innerText || el.textContent || '';
+                    if (raw.trim() && !raw.includes('Generating...') && !raw.includes('Analysis failed')) {
+                        texts[id] = raw.trim();
+                        originalTexts[id] = raw.trim(); // Store original
+                    }
+                }
+            });
+
+            if (!Object.keys(texts).length) return;
+
+            // Determine target: if page is in Arabic, translate to English. Otherwise to Arabic.
+            const targetLang = pageLang === 'ar' ? 'en' : 'ar';
+
+            btn.disabled = true;
+            btnIcon.className = 'fas fa-spinner fa-spin';
+            btnText.textContent = targetLang === 'ar' ? 'جارٍ الترجمة...' : 'Translating...';
+
+            try {
+                const res = await fetch('http://127.0.0.1:8000/ai/translate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ texts, target_lang: targetLang })
+                });
+                const data = await res.json();
+
+                if (data.error || !data.translated) {
+                    btnIcon.className = 'fas fa-language';
+                    btnText.textContent = 'Translation failed – try again';
+                    btn.disabled = false;
+                    return;
+                }
+
+                // Update each card with translated text
+                const translated = data.translated;
+                insightCardIds.forEach(id => {
+                    if (translated[id]) {
+                        const el = document.getElementById(id);
+                        if (el) el.innerHTML = formatBullets(translated[id]);
+                    }
+                });
+
+                insightsLang = 'translated';
+
+                // Set text direction
+                const dir = targetLang === 'ar' ? 'rtl' : 'ltr';
+                document.querySelectorAll('.ai-insight-text').forEach(el => el.style.direction = dir);
+
+                // Update button to show "back to original" option
+                btnIcon.className = 'fas fa-language';
+                btnText.textContent = targetLang === 'ar' ? 'العودة للنص الأصلي' : 'Back to Original';
+
+            } catch (err) {
+                console.error('Translation error:', err);
+                btnIcon.className = 'fas fa-language';
+                btnText.textContent = 'Translation failed – try again';
+            }
+
+            btn.disabled = false;
+        }
     </script>
     <script src="chatbot.js"></script>
 </body>
