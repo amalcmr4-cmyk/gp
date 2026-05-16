@@ -1,12 +1,19 @@
-from sqlalchemy import Integer,Float,Boolean, Column, String, Text ,create_engine,ForeignKey,JSON, DateTime 
-from sqlalchemy.orm import sessionmaker ,declarative_base ,relationship 
-from datetime import datetime ,timezone
 import enum
-from sqlalchemy import Enum
+import os
 import time
+from datetime import datetime, timezone
+from pathlib import Path
 
-DATABASE_URL = 'sqlite:///mydatabase.db'
-engine = create_engine(DATABASE_URL,connect_args={"check_same_thread": False})
+from dotenv import load_dotenv
+from sqlalchemy import Column, DateTime, Enum, Float, ForeignKey, Integer, String, Text, Boolean, JSON, create_engine
+from sqlalchemy.orm import declarative_base, relationship, sessionmaker
+
+#security Load environment variables for secrets and configuration.
+env_path = Path(__file__).parent.parent.parent / ".env"
+load_dotenv(dotenv_path=env_path)
+
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./mydatabase.db")
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 class AnalyzeStatus(enum.Enum):
@@ -17,37 +24,39 @@ class AnalyzeStatus(enum.Enum):
 
 Base = declarative_base()
 
+from app.models.user import User
+
 class UploadedFile(Base):
     __tablename__ = 'uploaded_files'
-    id = Column(String, primary_key=True, index=True,unique=True)
-    unique_name = Column(String,nullable=False)
-    original_name=Column(String,nullable=False)
-    file_size=Column(Integer,nullable=False)
-    file_type=Column(String,nullable=False)
-    file_path=Column(String,nullable=False)
-    upload_time = Column(DateTime,default=lambda:datetime.now(timezone.utc))
-    analyses = relationship("Analyze", back_populates="file", cascade="all, delete") 
+    id = Column(String, primary_key=True, index=True, unique=True)
+    unique_name = Column(String, nullable=False)
+    original_name = Column(String, nullable=False)
+    file_size = Column(Integer, nullable=False)
+    file_type = Column(String, nullable=False)
+    file_path = Column(String, nullable=False)
+    upload_time = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    analyses = relationship("Analyze", back_populates="file", cascade="all, delete")
     is_deleted = Column(Boolean, default=False)
-    
+
 class Analyze(Base):
     __tablename__ = 'analyze'
-    id = Column(Integer, primary_key=True,autoincrement=True)
-    file_id = Column(String, ForeignKey('uploaded_files.id',ondelete="CASCADE"),index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    file_id = Column(String, ForeignKey('uploaded_files.id', ondelete="CASCADE"), index=True)
     analyze_type = Column(String)
     result = Column(JSON)
     status = Column(Enum(AnalyzeStatus), default=AnalyzeStatus.pending)
-    date_time = Column(DateTime,default=lambda:datetime.now(timezone.utc),index=True)
-    execution_time = Column(Float,default=0.0) 
-    file = relationship("UploadedFile", back_populates="analyses") 
-    suggestions = relationship("Chat_suggestion", back_populates="analyze", cascade="all, delete")    
+    date_time = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
+    execution_time = Column(Float, default=0.0)
+    file = relationship("UploadedFile", back_populates="analyses")
+    suggestions = relationship("Chat_suggestion", back_populates="analyze", cascade="all, delete")
     error_message = Column(Text, nullable=True)
- 
+
 class Chat_suggestion(Base):
     __tablename__ = 'chatsuggestion'
-    id = Column(Integer, primary_key=True,autoincrement=True)
-    analyze_id = Column(Integer, ForeignKey('analyze.id',ondelete="CASCADE"),index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    analyze_id = Column(Integer, ForeignKey('analyze.id', ondelete="CASCADE"), index=True)
     suggestion_text = Column(Text)
-    suggestion_time = Column(DateTime,default=lambda:datetime.now(timezone.utc))   
+    suggestion_time = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     analyze = relationship("Analyze", back_populates="suggestions")
 
 Base.metadata.create_all(bind=engine)

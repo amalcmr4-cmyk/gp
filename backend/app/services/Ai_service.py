@@ -73,7 +73,7 @@ You are a senior business analyst.
 Analyze the business data below and return ONLY valid JSON.{lang_instruction}
 
 Return this exact structure:
-
+ss
 {{
   "summary": "",
   "pricing_strategy": "",

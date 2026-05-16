@@ -3,11 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.database import Base, engine
 from dotenv import load_dotenv
-import os
 from pathlib import Path
-env_path=Path(__file__).parent.parent/".env"
+
+env_path = Path(__file__).parent.parent.parent/".env"
 load_dotenv(dotenv_path=env_path)
-from app.routers import analysis_router,upload_router,visualization_router,report_router,Ai_router
+from app.routers import analysis_router, upload_router, visualization_router, report_router, Ai_router
+from app.routes.auth import router as auth_router
 
 # Serve frontend files from the parent (gpp) directory
 FRONTEND_DIR = Path(__file__).parent.parent.parent
@@ -31,8 +32,9 @@ app.add_middleware(
 app.include_router(upload_router.router, prefix="/upload", tags=["Upload"])
 app.include_router(analysis_router.router, prefix="/analysis", tags=["Analysis"])
 app.include_router(visualization_router.router, prefix="/visualization", tags=["Visualization"])
-app.include_router(report_router.router,prefix="/reports",tags=["Reports"])
+app.include_router(report_router.router, prefix="/reports", tags=["Reports"])
 app.include_router(Ai_router.router, prefix="/ai", tags=["AI Business Insights"])
+app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 
 # Mount frontend static files (must be AFTER all API routers)
 app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")

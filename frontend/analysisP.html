@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="analysisP.css">
     <link rel="stylesheet" href="chatbot.css">
     <script src="i18n.js"></script>
+    <script src="auth.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 
@@ -43,6 +44,7 @@
             <div class="nav-item"><i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span></div>
             <div class="nav-item"><i class="fas fa-shield-alt"></i> <span data-i18n="terms">Terms & Policies</span>
             </div>
+            <div class="nav-item"><button id="logoutBtn" class="btn" style="background:#ef4444;color:white;border-color:rgba(239,68,68,.5);">Logout</button></div>
             <div class="copyright">© 2026 DataWizard</div>
         </div>
     </aside>
@@ -1107,6 +1109,19 @@
             // Reload on language switch to get translated AI insights
             window.addEventListener('dw-lang-changed', () => {
                 window.location.reload();
+            });
+
+            // Logout handling — delegate to central auth helper when available
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) logoutBtn.addEventListener('click', () => {
+                if (window.auth && typeof window.auth.logout === 'function') {
+                    window.auth.logout({ clearAllSession: true, redirect: 'login.html' });
+                } else {
+                    const keys = ['access_token','id_token','refresh_token','user','dw_user','currentUser'];
+                    keys.forEach(k => localStorage.removeItem(k));
+                    try { sessionStorage.clear(); } catch (e) {}
+                    window.location.href = 'login.html';
+                }
             });
         });
     </script>
