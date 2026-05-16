@@ -77,6 +77,14 @@ label {
     font-weight: 600;
     color: #d4c2ff;
 }
+.con{
+    display: block;
+    text-align: left;
+    margin-top: 3px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #d4c2ff;
+}
 input {
     width: 100%;
     padding: 14px;
@@ -153,4 +161,30 @@ button:hover {
     border-radius: 20px; cursor: pointer; transition: all 0.25s;
     border: 1px solid rgba(200,170,37,0.5); color: #fae379;
     background: rgba(200,170,37,0.12); font-family: 'Tajawal', sans-serif;
-}
+}
+.legend-item {
+    display: flex;         
+  align-items: center;   
+  gap:2px;
+  padding:-1px;
+    transition: all 0.25s ease;
+}
+.legend-dot {
+    
+    width: 6px;
+    height: 6px;
+    min-width: 6px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.legend-dot.green-dot {
+    background: #4ade80;
+    box-shadow: 0 0 8px rgba(74, 222, 128, .6);
+}
+
+.legend-dot.red-dot {
+    background: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, .6);
+}

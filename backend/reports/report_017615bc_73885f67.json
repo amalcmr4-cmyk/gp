@@ -1,0 +1,184 @@
+{
+    "report_id": "73885f67-1e3c-40a0-b0a2-e4bf29af6662",
+    "file_info": {
+        "file_id": "017615bc",
+        "original_name": "features.csv",
+        "file_size_mb": 0.56,
+        "uploaded_at": "2026-05-15T16:48:41.644310"
+    },
+    "analysis_count": 9,
+    "generated_at": "2026-05-15T22:08:10.497745",
+    "analyses": [
+        {
+            "analysis_id": 536,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-15T17:03:12.325049",
+            "summary": {
+                "total_rows": 8190,
+                "total_columns": 12,
+                "quality_score": 75.54,
+                "warnings": [
+                    "High variance detected in 'MarkDown1'",
+                    "High variance detected in 'MarkDown2'",
+                    "High variance detected in 'MarkDown3'",
+                    "High variance detected in 'MarkDown4'",
+                    "High variance detected in 'MarkDown5'",
+                    "High variance detected in 'IsHoliday'",
+                    "Moderate data quality"
+                ],
+                "insights": []
+            }
+        },
+        {
+            "analysis_id": 535,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-15T17:03:11.470234",
+            "summary": {
+                "total_rows": 8190,
+                "total_columns": 12,
+                "quality_score": 75.54,
+                "warnings": [
+                    "High variance detected in 'MarkDown1'",
+                    "High variance detected in 'MarkDown2'",
+                    "High variance detected in 'MarkDown3'",
+                    "High variance detected in 'MarkDown4'",
+                    "High variance detected in 'MarkDown5'",
+                    "High variance detected in 'IsHoliday'",
+                    "Moderate data quality"
+                ],
+                "insights": []
+            }
+        },
+        {
+            "analysis_id": 534,
+            "analysis_type": "basic",
+            "status": "completed",
+            "date_time": "2026-05-15T17:03:10.926321",
+            "summary": {
+                "total_rows": 0,
+                "total_columns": 0,
+                "quality_score": 0,
+                "warnings": [
+                    "Low data quality"
+                ],
+                "insights": []
+            }
+        },
+        {
+            "analysis_id": 533,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-15T17:01:06.833805",
+            "summary": {
+                "total_rows": 8190,
+                "total_columns": 12,
+                "quality_score": 75.54,
+                "warnings": [
+                    "High variance detected in 'MarkDown1'",
+                    "High variance detected in 'MarkDown2'",
+                    "High variance detected in 'MarkDown3'",
+                    "High variance detected in 'MarkDown4'",
+                    "High variance detected in 'MarkDown5'",
+                    "High variance detected in 'IsHoliday'",
+                    "Moderate data quality"
+                ],
+                "insights": []
+            }
+        },
+        {
+            "analysis_id": 532,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-15T17:01:04.075435",
+            "summary": {
+                "total_rows": 8190,
+                "total_columns": 12,
+                "quality_score": 75.54,
+                "warnings": [
+                    "High variance detected in 'MarkDown1'",
+                    "High variance detected in 'MarkDown2'",
+                    "High variance detected in 'MarkDown3'",
+                    "High variance detected in 'MarkDown4'",
+                    "High variance detected in 'MarkDown5'",
+                    "High variance detected in 'IsHoliday'",
+                    "Moderate data quality"
+                ],
+                "insights": []
+            }
+        },
+        {
+            "analysis_id": 531,
+            "analysis_type": "basic",
+            "status": "completed",
+            "date_time": "2026-05-15T17:01:02.863784",
+            "summary": {
+                "total_rows": 0,
+                "total_columns": 0,
+                "quality_score": 0,
+                "warnings": [
+                    "Low data quality"
+                ],
+                "insights": []
+            }
+        },
+        {
+            "analysis_id": 530,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-15T16:48:46.975723",
+            "summary": {
+                "total_rows": 8190,
+                "total_columns": 12,
+                "quality_score": 75.54,
+                "warnings": [
+                    "High variance detected in 'MarkDown1'",
+                    "High variance detected in 'MarkDown2'",
+                    "High variance detected in 'MarkDown3'",
+                    "High variance detected in 'MarkDown4'",
+                    "High variance detected in 'MarkDown5'",
+                    "High variance detected in 'IsHoliday'",
+                    "Moderate data quality"
+                ],
+                "insights": []
+            }
+        },
+        {
+            "analysis_id": 529,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-15T16:48:44.235175",
+            "summary": {
+                "total_rows": 8190,
+                "total_columns": 12,
+                "quality_score": 75.54,
+                "warnings": [
+                    "High variance detected in 'MarkDown1'",
+                    "High variance detected in 'MarkDown2'",
+                    "High variance detected in 'MarkDown3'",
+                    "High variance detected in 'MarkDown4'",
+                    "High variance detected in 'MarkDown5'",
+                    "High variance detected in 'IsHoliday'",
+                    "Moderate data quality"
+                ],
+                "insights": []
+            }
+        },
+        {
+            "analysis_id": 528,
+            "analysis_type": "basic",
+            "status": "completed",
+            "date_time": "2026-05-15T16:48:44.031415",
+            "summary": {
+                "total_rows": 0,
+                "total_columns": 0,
+                "quality_score": 0,
+                "warnings": [
+                    "Low data quality"
+                ],
+                "insights": []
+            }
+        }
+    ]
+}

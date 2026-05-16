@@ -1,0 +1,334 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #6a1b9a;
+    --primary-dark: #451264;
+    --accent: #c8aa25;
+    --accent-glow: #fae379;
+    --magic-purple: #8e2de2;
+    --glass-bg: rgba(30, 20, 60, 0.68);
+    --glass-border: rgba(140, 80, 220, 0.38);
+    --glow: 0 0 18px rgba(142, 45, 226, 0.55);
+    --sidebar-bg: rgba(35, 15, 65, 0.38);
+    --text-dark: #1e0738;
+    --text-light: #f3e8ff;
+    --text-medium: #d4c2ff;
+}
+
+body {
+    
+    font-family: 'Tajawal', system-ui, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #b667e7, #fff7d3, #e4bff9, #fae379);
+    background-size: 300% 300%;
+    animation: gradientMove 20s ease infinite;
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4.2rem;
+    background: rgba(237, 226, 238, 0.22);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.8rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    width: 42px;
+    height: 42px;
+}
+
+.navbar h1 {
+    font-size: 1.55rem;
+    font-weight: 800;
+    background: linear-gradient(to right, var(--accent), var(--primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.menu-toggle {
+    background: rgba(124, 58, 237, 0.2);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 1.4rem;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.22s;
+}
+
+.menu-toggle:hover {
+    background: rgba(124, 58, 237, 0.35);
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    padding: 0.65rem 1.5rem;
+    font-size: 0.98rem;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    background: rgba(124, 58, 237, 0.18);
+}
+
+.btn:hover {
+    border-color: #ffffff;
+    background: rgba(124, 58, 237, 0.3);
+}
+
+.btn.primary {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary-dark);
+}
+
+.sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: 270px;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar.open {
+    transform: translateX(0);
+}
+
+.sidebar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--sidebar-bg);
+    backdrop-filter: blur(18px) saturate(160%);
+    z-index: -1;
+}
+
+.sidebar-header {
+    padding: 1.2rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(180, 120, 255, 0.2);
+}
+
+.sidebar-header h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--accent), var(--primary), var(--primary-dark));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.new-chat-btn {
+    margin: 1.2rem 1.4rem;
+    padding: 0.9rem 1.2rem;
+    background: var(--accent);
+    color: #111;
+    border: none;
+    width: 80%;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.25s;
+}
+
+.new-chat-btn:hover {
+    background: var(--primary);
+    color: var(--primary-light);
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 0.8rem 0.5rem;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.9rem 1.2rem;
+    color: rgba(255, 255, 255, 0.75);
+    border-radius: 10px;
+    margin: 0.25rem 0.6rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nav-item a {
+    color: rgba(255, 255, 255, .75);
+    text-decoration: none;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: rgba(124, 58, 237, 0.18);
+    color: white;
+}
+
+.sidebar-footer {
+    padding: 1.2rem 1.4rem;
+    border-top: 1px solid rgba(180, 120, 255, 0.2);
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.sidebar-footer .nav-item {
+    margin: 0;
+    padding: 0.7rem 0;
+}
+
+.copyright {
+    margin-top: 1.4rem;
+    text-align: center;
+    font-size: 0.82rem;
+    opacity: 0.6;
+}
+.content {
+    flex:1;
+    padding: 6.5rem 1.6rem 4rem;
+    display: flex;
+    min-height:100%;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Language Toggle */
+.lang-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+    color:var(--primary);
+    font-weight: 700;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: 1px solid rgba(129, 110, 24, 0.5);
+    
+    background: rgba(151, 128, 28, 0.12);
+    font-family: 'Tajawal', sans-serif;
+    white-space: nowrap;
+}
+
+.lang-toggle:hover {
+    background: rgba(78, 67, 15, 0.25);
+    transform: scale(1.05);
+}
+.page-footer {
+    width: 100%;
+    background: rgba(20, 10, 50, 0.75);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(140, 80, 220, 0.3);
+    padding: 2.5rem 1.5rem 2rem;
+    margin-top: 4rem;
+    color: #d0c0ff;
+    font-size: 0.95rem;
+    text-align: center;
+    
+}
+
+.footer-content {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.security-badges {
+    display: flex;
+    justify-content: center;
+    gap: 2.8rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.8rem;
+}
+
+.security-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    white-space: nowrap;
+}
+
+.security-item i {
+    font-size: 1.4rem;
+    color: #b19cd9;
+}
+
+.security-item span {
+    font-weight: 500;
+}
+
+.footer-extra {
+    opacity: 0.85;
+    line-height: 1.6;
+}
+
+.footer-extra p {
+    margin: 0.4rem 0;
+}
+
+@media (max-width: 640px) {
+    .security-badges {
+        gap: 1.6rem 2rem;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .page-footer {
+        padding: 2rem 1rem 1.5rem;
+    }
+}

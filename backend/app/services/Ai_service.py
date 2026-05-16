@@ -73,7 +73,7 @@ You are a senior business analyst.
 Analyze the business data below and return ONLY valid JSON.{lang_instruction}
 
 Return this exact structure:
-ss
+
 {{
   "summary": "",
   "pricing_strategy": "",
@@ -268,3 +268,62 @@ async def process_chat_message(
     response_text = generator.chat_with_data(analysis_result, message)
     
     return {"response": response_text}
+
+
+async def translate_texts(texts: dict, target_lang: str = "ar"):
+    """Translate a dict of insight texts to the target language using Gemini.
+    This does NOT re-analyze data — it simply translates the existing text."""
+
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        print("[translate_texts] ERROR: GEMINI_API_KEY not set")
+        return {"error": "Gemini API key not configured."}
+
+    # Filter out empty texts
+    clean_texts = {k: v for k, v in texts.items() if v and str(v).strip()}
+    if not clean_texts:
+        return {"error": "No texts provided to translate."}
+
+    print(f"[translate_texts] Translating {len(clean_texts)} cards to '{target_lang}'")
+
+    client = genai.Client(api_key=api_key)
+    lang_name = "Arabic" if target_lang == "ar" else "English"
+
+    # Build compact JSON input so Gemini knows exactly what to translate
+    texts_json = json.dumps(clean_texts, ensure_ascii=False, indent=2)
+
+    prompt = f"""You are a professional translator.
+
+Translate EVERY value in the JSON below to {lang_name}. Keep the keys exactly as they are.
+Return ONLY valid JSON, no explanation, no markdown, no code fences.
+
+Input JSON:
+{texts_json}
+
+Translated JSON:"""
+
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+            config=types.GenerateContentConfig(temperature=0.1)
+        )
+
+        raw = response.text.strip()
+        print(f"[translate_texts] Raw response (first 300 chars): {raw[:300]}")
+
+        # Strip markdown code fences if present
+        raw = raw.replace("```json", "").replace("```", "").strip()
+
+        translated = extract_json(raw)
+
+        if not translated:
+            print(f"[translate_texts] ERROR: Could not parse JSON from response: {raw[:200]}")
+            return {"error": "Failed to parse translation response.", "raw": raw[:200]}
+
+        print(f"[translate_texts] SUCCESS: translated {len(translated)} keys")
+        return {"translated": translated, "target_lang": target_lang}
+
+    except Exception as e:
+        print(f"[translate_texts] EXCEPTION: {str(e)}")
+        return {"error": f"Translation failed: {str(e)}"}
