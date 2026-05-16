@@ -31,9 +31,6 @@
             <div class="nav-item active">
                 <i class="fas fa-upload"></i><a href="#toUpload" data-i18n="uploadNew">Upload New Data</a>
             </div>
-            <!-- <div class="nav-item">
-                <i class="fas fa-comment-dots"></i><a href="#section2" id="SBDB" data-i18n="dashboard">Dashboard</a>
-            </div> -->
             <div class="nav-item"><i class="fas fa-chart-line"></i>
                 <a href="analysisP.html" data-i18n="analysis">Analysis</a>
             </div>
@@ -139,10 +136,6 @@
                     <span data-i18n="encryption">256-bit Encryption</span>
                 </div>
                 <div class="security-item">
-                    <i class="fas fa-shield-alt"></i>
-                    <span data-i18n="dataNotStored">Data Never Stored</span>
-                </div>
-                <div class="security-item">
                     <i class="fas fa-user-shield"></i>
                     <span data-i18n="gdpr">GDPR Compliant</span>
                 </div>
@@ -174,7 +167,6 @@
             const uploadZone = document.getElementById("uploadZone");
             const analyzeBtn = document.getElementById("analyzeBtn");
             const section2 = document.getElementById("section2");
-            const SBDB = document.getElementById("SBDB");
 
             let selectedFile = null;
 
@@ -327,11 +319,6 @@
                         showToast(t('selectFileFirst'), "error");
                     }
                 });
-                // SBDB.addEventListener("click", function (e) {
-                //     e.preventDefault();
-                //     showToast(t('dashboardToast'), "info");
-                //     document.getElementById("uploadZone").scrollIntoView({ behavior: 'smooth' });
-                // });
             }
             
 

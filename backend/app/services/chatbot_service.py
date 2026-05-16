@@ -1,9 +1,3 @@
-"""
-DataWizard Chatbot Service — Powered by Google Gemini 2.5 Flash (Free Tier)
-Provides advanced data analysis, prediction, and natural conversation.
-Completely separate from the HuggingFace AI Insights service.
-"""
-
 import os
 import json
 import pandas as pd

@@ -150,7 +150,6 @@ button:hover {
     100% { opacity: 1; }
 }
 
-/* ═══════════ RTL Support ═══════════ */
 [dir="rtl"] .modal-content { text-align: center; }
 [dir="rtl"] label { text-align: right; }
 [dir="rtl"] .close-modal { right: auto; left: 22px; }

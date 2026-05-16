@@ -1,12 +1,7 @@
-// i18n.js — DataWizard Bilingual System (AR / EN)
-// Handles translation, RTL, and language toggle across all pages.
-
+//AR / EN
 (function () {
     'use strict';
 
-    // ═══════════════════════════════════════════════════
-    //  Translation Dictionary
-    // ═══════════════════════════════════════════════════
     const dict = {
         // ── Navbar & General ──
         signUp:          { en: 'Sign Up',              ar: 'إنشاء حساب' },
@@ -198,23 +193,18 @@
         uploading:       { en: 'Uploading...',          ar: 'جارٍ الرفع...' },
     };
 
-    // ═══════════════════════════════════════════════════
-    //  Core Functions
-    // ═══════════════════════════════════════════════════
     const STORAGE_KEY = 'dw-lang';
 
     function getCurrentLang() {
         return localStorage.getItem(STORAGE_KEY) || 'en';
     }
 
-    /** Get translated text by key */
     function t(key) {
         const lang = getCurrentLang();
         if (dict[key]) return dict[key][lang] || dict[key]['en'] || key;
         return key;
     }
 
-    /** Apply all data-i18n attributes on the page */
     function applyTranslations() {
         const lang = getCurrentLang();
         document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -241,7 +231,6 @@
         });
     }
 
-    /** Set language and apply RTL/LTR */
     function setLanguage(lang) {
         localStorage.setItem(STORAGE_KEY, lang);
         const html = document.documentElement;
@@ -251,7 +240,6 @@
         updateToggleButton(lang);
     }
 
-    /** Create/update the language toggle button */
     function updateToggleButton(lang) {
         let btn = document.getElementById('dw-lang-toggle');
         if (btn) {
@@ -261,7 +249,6 @@
         }
     }
 
-    /** Inject the toggle button into the navbar */
     function injectToggleButton() {
         // Find the nav-buttons container or create one
         let navBtns = document.querySelector('.nav-buttons');
@@ -287,9 +274,7 @@
         target.insertBefore(btn, target.firstChild);
     }
 
-    // ═══════════════════════════════════════════════════
-    //  Initialize on DOM Ready
-    // ═══════════════════════════════════════════════════
+   
     function initI18n() {
         const lang = getCurrentLang();
         const html = document.documentElement;
@@ -305,9 +290,6 @@
         initI18n();
     }
 
-    // ═══════════════════════════════════════════════════
-    //  Expose globally
-    // ═══════════════════════════════════════════════════
     window.t = t;
     window.getCurrentLang = getCurrentLang;
     window.setLanguage = setLanguage;
