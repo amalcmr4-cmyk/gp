@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="chatbot.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <script src="i18n.js"></script>
+    <script src="auth.js"></script>
 </head>
 <body>
 
@@ -33,6 +34,7 @@
             </div>
         </div>
         <div class="sidebar-footer">
+            <div class="nav-item"><button id="logoutBtn" class="btn" style="background:#ef4444;color:white;border-color:rgba(239,68,68,.5);">Logout</button></div>
             <div class="copyright">© 2026 DataWizard</div>
         </div>
     </aside>
@@ -205,6 +207,19 @@
             } catch (err) {
                 loading.innerHTML = `<h3 style="color:#f87171; text-align:center;"><i class="fas fa-exclamation-triangle"></i><br>Error Loading Report</h3><p style="color:#fca5a5; margin-top:1rem;">${err.message}</p>`;
                 console.error(err);
+            }
+        });
+
+        // Logout handling — delegate to central auth helper when available
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) logoutBtn.addEventListener('click', () => {
+            if (window.auth && typeof window.auth.logout === 'function') {
+                window.auth.logout({ clearAllSession: true, redirect: 'login.html' });
+            } else {
+                const keys = ['access_token','id_token','refresh_token','user','dw_user','currentUser'];
+                keys.forEach(k => localStorage.removeItem(k));
+                try { sessionStorage.clear(); } catch (e) {}
+                window.location.href = 'login.html';
             }
         });
     </script>

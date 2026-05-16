@@ -274,7 +274,215 @@
         target.insertBefore(btn, target.firstChild);
     }
 
-   
+
+
+    function decodeJwtPayload(token) {
+        if (!token || typeof token !== 'string') return null;
+        const parts = token.split('.');
+        if (parts.length !== 3) return null;
+
+        try {
+            const payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+            const padded = payload.padEnd(payload.length + (4 - (payload.length % 4)) % 4, '=');
+            return JSON.parse(atob(padded));
+        } catch (err) {
+            return null;
+        }
+    }
+
+    function getUserFromStorage() {
+        const stored = localStorage.getItem('user') || localStorage.getItem('dw_user') || localStorage.getItem('currentUser');
+        if (!stored) return null;
+        try {
+            const parsed = JSON.parse(stored);
+            return parsed && typeof parsed === 'object' ? parsed : null;
+        } catch (err) {
+            return null;
+        }
+    }
+
+    function getUserFromToken(token) {
+        const payload = decodeJwtPayload(token);
+        if (!payload) return null;
+
+        return {
+            name: payload.name || payload.full_name || payload.given_name || payload.preferred_username || payload.username || '',
+            email: payload.email || payload.sub || payload.username || ''
+        };
+    }
+
+    function getCurrentUser() {
+        if (window.auth && typeof window.auth.getCurrentUser === 'function') {
+            try { return window.auth.getCurrentUser(); } catch (e) { /* fallback */ }
+        }
+        const stored = getUserFromStorage();
+        if (stored && (stored.name || stored.email)) return stored;
+
+        const token = localStorage.getItem('access_token');
+        if (!token) return null;
+
+        const userFromToken = getUserFromToken(token);
+        if (userFromToken && (userFromToken.name || userFromToken.email)) return userFromToken;
+
+        return null;
+    }
+
+    function getAvatarLetter(user) {
+        const text = (user && (user.name || user.email || '')).trim();
+        return text ? text.charAt(0).toUpperCase() : '?';
+    }
+
+    function injectAuthStyles() {
+        if (document.getElementById('dw-auth-ui-styles')) return;
+
+        const style = document.createElement('style');
+        style.id = 'dw-auth-ui-styles';
+        style.textContent = `
+            .dw-user-avatar {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--accent), var(--primary));
+                color: #1b0c34;
+                font-weight: 800;
+                font-size: 1rem;
+                border: 1px solid rgba(255,255,255,0.3);
+                cursor: default;
+                min-width: 44px;
+                min-height: 44px;
+            }
+            .nav-buttons {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            .sidebar-profile {
+                display: flex;
+                align-items: center;
+                gap: 0.9rem;
+                padding: 1rem 1rem 0.95rem;
+                margin-bottom: 1rem;
+                border-radius: 18px;
+                background: rgba(124, 58, 237, 0.14);
+                border: 1px solid rgba(255,255,255,0.12);
+            }
+            .sidebar-profile-avatar {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--accent), var(--primary));
+                color: #1b0c34;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 800;
+                font-size: 1rem;
+                border: 1px solid rgba(255,255,255,0.28);
+            }
+            .sidebar-profile-meta {
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+            }
+            .sidebar-profile-name {
+                font-size: 0.95rem;
+                font-weight: 700;
+                color: rgba(255,255,255,0.95);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .sidebar-profile-email {
+                font-size: 0.82rem;
+                color: rgba(255,255,255,0.65);
+                line-height: 1.3;
+                word-break: break-all;
+            }
+            @media (max-width: 768px) {
+                .sidebar-profile {
+                    padding: 0.9rem 0.9rem 0.85rem;
+                }
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+
+    function removeAuthLinks(container) {
+        if (!container) return;
+        const selectors = ['a[href*="signup"]', 'a[href*="login"]', 'button[data-i18n="signUp"]', 'button[data-i18n="logIn"]'];
+        container.querySelectorAll(selectors.join(',')).forEach(el => {
+            if (el.id !== 'dw-lang-toggle') {
+                el.remove();
+            }
+        });
+    }
+
+    function buildUserAvatar(user) {
+        const avatar = document.createElement('div');
+        avatar.className = 'dw-user-avatar';
+        avatar.textContent = getAvatarLetter(user);
+        avatar.title = user.name || user.email || 'User';
+        return avatar;
+    }
+
+    function buildSidebarProfile(user) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'sidebar-profile';
+
+        const avatar = document.createElement('div');
+        avatar.className = 'sidebar-profile-avatar';
+        avatar.textContent = getAvatarLetter(user);
+
+        const meta = document.createElement('div');
+        meta.className = 'sidebar-profile-meta';
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'sidebar-profile-name';
+        nameEl.textContent = user.name ? user.name : user.email;
+
+        const emailEl = document.createElement('div');
+        emailEl.className = 'sidebar-profile-email';
+        emailEl.textContent = user.email || '';
+
+        meta.appendChild(nameEl);
+        meta.appendChild(emailEl);
+
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(meta);
+        return wrapper;
+    }
+
+    function initAuthUI() {
+        injectAuthStyles();
+
+        const user = getCurrentUser();
+        if (!user) return;
+
+        const navBtns = document.querySelector('.nav-buttons');
+        if (navBtns) {
+            removeAuthLinks(navBtns);
+            const existingAvatar = navBtns.querySelector('.dw-user-avatar');
+            if (!existingAvatar) {
+                const avatarNode = buildUserAvatar(user);
+                navBtns.appendChild(avatarNode);
+            }
+        }
+
+        const sidebarFooter = document.querySelector('.sidebar-footer');
+        if (sidebarFooter && !sidebarFooter.querySelector('.sidebar-profile')) {
+            const profileSection = buildSidebarProfile(user);
+            sidebarFooter.insertBefore(profileSection, sidebarFooter.firstChild);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  Initialize on DOM Ready
+    // ═══════════════════════════════════════════════════
+
     function initI18n() {
         const lang = getCurrentLang();
         const html = document.documentElement;
@@ -282,6 +490,7 @@
         html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
         injectToggleButton();
         applyTranslations();
+        initAuthUI();
     }
 
     if (document.readyState === 'loading') {
@@ -290,9 +499,19 @@
         initI18n();
     }
 
+
+    // Re-initialize auth UI when auth state changes
+    window.addEventListener('auth-changed', () => {
+        try { initI18n(); } catch (e) { /* ignore */ }
+    });
+
+    // ═══════════════════════════════════════════════════
+    //  Expose globally
+    // ═══════════════════════════════════════════════════
     window.t = t;
     window.getCurrentLang = getCurrentLang;
     window.setLanguage = setLanguage;
     window.applyTranslations = applyTranslations;
+    window.getCurrentUser = getCurrentUser;
 
 })();

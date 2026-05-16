@@ -68,20 +68,45 @@
     </div>
   </div>
 
-  <script>
-    document.getElementById("signupForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const btn = this.querySelector('button[type="submit"]');
-      btn.innerHTML = '<span style="display:inline-block; animation: pulse 1s infinite;">' + t('creatingAccount') + '</span>';
-      btn.disabled = true;
+<script>
+document.getElementById("signupForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
 
-      // Simulate network request
-      setTimeout(() => {
-        window.location.href = "home2.html?signup=success";
-      }, 1500);
-    });
-  </script>
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-</body>
+    const btn = this.querySelector('button[type="submit"]');
+    btn.innerHTML = "Creating account...";
+    btn.disabled = true;
 
-</html>
+    try {
+        const res = await fetch("http://127.0.0.1:8000/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.detail || "Signup failed");
+            btn.innerHTML = "Sign Up";
+            btn.disabled = false;
+            return;
+        }
+
+        alert("Account created successfully");
+
+        // بعد النجاح نروح login
+        window.location.href = "login.html";
+
+    } catch (err) {
+        alert("Server error");
+        btn.innerHTML = "Sign Up";
+        btn.disabled = false;
+    }
+});
+</script>

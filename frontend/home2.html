@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="home2.css">
     <link rel="stylesheet" href="chatbot.css">
     <script src="i18n.js"></script>
+    <script src="auth.js"></script>
 </head>
 
 <body>
@@ -48,6 +49,9 @@
             </div>
             <div class="nav-item">
                 <i class="fas fa-shield-alt"></i> <a href="terms.html" data-i18n="terms">Terms & Policies</a>
+            </div>
+            <div class="nav-item">
+                <button id="logoutBtn" class="btn" style="background:#ef4444;color:white;border-color:rgba(239,68,68,.5);">Logout</button>
             </div>
             <div class="copyright">
                 © 2026 DataWizard
@@ -338,6 +342,19 @@
             document.addEventListener('click', (e) => {
                 if (!sidebar.contains(e.target) && !openBtn.contains(e.target)) {
                     sidebar.classList.remove('open');
+                }
+            });
+
+            // Logout handling — delegate to central auth helper when available
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) logoutBtn.addEventListener('click', () => {
+                if (window.auth && typeof window.auth.logout === 'function') {
+                    window.auth.logout({ clearAllSession: true, redirect: 'login.html' });
+                } else {
+                    const keys = ['access_token','id_token','refresh_token','user','dw_user','currentUser'];
+                    keys.forEach(k => localStorage.removeItem(k));
+                    try { sessionStorage.clear(); } catch (e) {}
+                    window.location.href = 'login.html';
                 }
             });
         });

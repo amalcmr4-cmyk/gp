@@ -34,7 +34,7 @@
             <button type="submit" data-i18n="signInBtn">Sign In</button>
         </form>
 
-        <a href="#" class="forgot" data-i18n="forgotPass">Forgot password?</a>
+        <a href="forgot-password.html" class="forgot" data-i18n="forgotPass">Forgot password?</a>
 
         <p class="already-have-account">
             <span data-i18n="noAccount">Don't have an account?</span> <a href="signup.html" data-i18n="signUpLink">Sign up</a>
@@ -44,16 +44,43 @@
 </div>
 
 <script>
-document.getElementById("loginForm").addEventListener("submit", function(e) {
-    e.preventDefault(); 
-    const btn = this.querySelector('button[type="submit"]');
-    btn.innerHTML = '<span style="display:inline-block; animation: pulse 1s infinite;">' + t('authenticating') + '</span>';
+document.getElementById("loginForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const email = this.querySelector('input[type="email"]').value;
+    const password = this.querySelector('input[type="password"]').value;
+
+    const btn = this.querySelector('button');
+    btn.innerHTML = "Loading...";
     btn.disabled = true;
-    
-    // Simulate network request
-    setTimeout(() => {
+
+    try {
+        const res = await fetch("http://127.0.0.1:8000/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.detail || "Login failed");
+            btn.innerHTML = "Sign In";
+            btn.disabled = false;
+            return;
+        }
+
+        localStorage.setItem("access_token", data.access_token);
+
         window.location.href = "home2.html?login=success";
-    }, 1500);
+
+    } catch (err) {
+        alert("Server error");
+        btn.innerHTML = "Sign In";
+        btn.disabled = false;
+    }
 });
 </script>
 
