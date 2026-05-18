@@ -210,7 +210,6 @@ async def advanced_analysis_service(file_id: str, db):
 
     
     def convert_to_serializable(obj):
-        # التعامل مع أنواع أرقام بايثون ونومباي
         if isinstance(obj, (np.integer, np.int64, np.int32)):
             return int(obj)
         elif isinstance(obj, (np.floating, np.float64, np.float32)):
@@ -219,32 +218,27 @@ async def advanced_analysis_service(file_id: str, db):
             return float(obj)
         elif isinstance(obj, (np.ndarray, pd.Series)):
             return obj.tolist()
-        # التعامل مع التواريخ (مهم جداً للملفات التي تحتوي على وقت أو تاريخ)
         elif hasattr(obj, 'isoformat'): 
             return obj.isoformat()
-        # التعامل مع أي قيمة فارغة تابعة لـ Pandas أو Numpy
         elif pd.isna(obj):
             return None
         return obj
 
-    # قبل تحويل الـ sample_data إلى dict، نضمن استبدال القيم غير المتوافقة مع JSON
-    # استبدال الخلايا الفارغة بـ None (والتي تتحول في JSON إلى null)
     df_filled = df.astype(object).where(pd.notna(df), None)
     analysis["sample_data"] = df_filled.head(5).to_dict(orient="records")
 
-    # تحويل القاموس بالكامل إلى نص JSON معالَج بأمان
     try:
         json_str = json.dumps(analysis, default=convert_to_serializable, ensure_ascii=False)
         final_analysis = json.loads(json_str)
     except Exception as json_err:
         import traceback
-        print("====== خطأ أثناء تحويل البيانات إلى JSON ======")
+        print("Something wrong when convarte data to JSON")
         traceback.print_exc()
         raise HTTPException(500, f"JSON serialization failed: {str(json_err)}")
 
     execution_time = round(time.time() - start_time, 4)
     
-    # حفظ النتيجة في قاعدة البيانات
+    
     add_analysis_result(db=db, file_id=file_id, analyze_type="advanced_analysis",
                         result=final_analysis, status=AnalyzeStatus.completed, execution_time=execution_time)
     

@@ -233,7 +233,6 @@
                 if (!sidebar.contains(e.target) && !document.getElementById('openSidebar').contains(e.target))
                     sidebar.classList.remove('open');
             });
-            // Logout handling — delegate to central auth helper when available
             const logoutBtn = document.getElementById('logoutBtn');
             if (logoutBtn) logoutBtn.addEventListener('click', () => {
                 if (window.auth && typeof window.auth.logout === 'function') {

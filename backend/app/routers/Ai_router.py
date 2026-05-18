@@ -9,7 +9,6 @@ from app.services.chatbot_service import process_gemini_chat
 router = APIRouter()
 
 
-# ─── Translate existing insight texts (no re-analysis) ───
 class TranslateRequest(BaseModel):
     texts: Dict[str, str]
     target_lang: str = "ar"
@@ -20,7 +19,6 @@ async def translate_insights_text(request: TranslateRequest):
     Does NOT re-run the AI analysis — just translates the current text."""
     try:
         result = await translate_texts(request.texts, request.target_lang)
-        # Always return the result — frontend checks for result.error vs result.translated
         return result
     except Exception as e:
         print(f"Translation endpoint error: {str(e)}")
@@ -40,7 +38,6 @@ async def business_insights(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# ─── Legacy chat endpoint (Kept for backward compatibility) ───
 class ChatRequest(BaseModel):
     message: str
 
@@ -57,7 +54,6 @@ async def chat_with_data_endpoint(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# ─── NEW: Gemini-Powered Advanced Chat ───
 class GeminiChatRequest(BaseModel):
     message: str
     conversation_history: Optional[List[Dict[str, str]]] = []

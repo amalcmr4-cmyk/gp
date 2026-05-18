@@ -30,9 +30,6 @@ def get_meaningful_numeric_columns(df: pd.DataFrame) -> List[str]:
             continue
         meaningful.append(col)
     return meaningful
-# ═══════════════════════════════════════════════════════════
-#  Statistical Prediction Engine
-# ═══════════════════════════════════════════════════════════
 
 class PredictionEngine:
     """Pre-computes statistical predictions so Gemini narrates real numbers."""
@@ -183,11 +180,6 @@ class PredictionEngine:
                         sections.append(f"- {col}: estimated {info['estimated_change_pct']}% change (correlation: {info['correlation']})")
 
         return "\n".join(sections)
-
-
-# ═══════════════════════════════════════════════════════════
-#  Gemini Chatbot
-# ═══════════════════════════════════════════════════════════
 
 class GeminiChatbot:
     """Advanced data analyst chatbot powered by Google Gemini."""
@@ -346,11 +338,15 @@ class GeminiChatbot:
 - Act as a patient teacher. Explain every single number, concept, and result in EXHAUSTIVE detail (تفاصيل دقيقة جداً ومبسطة).
 - Use everyday analogies to explain data concepts (e.g., explaining average like dividing a pie equally among friends).
 - Never use complex statistical jargon (like "standard deviation" or "IQR") without immediately explaining what it means in very simple terms.
+- CRITICAL RULE: You are ONLY allowed to answer questions directly related to the provided dataset.
+- If the user asks about ANYTHING outside the dataset (e.g., sleeping, cooking, general knowledge, programming, or history), you MUST politely refuse to answer.
+- Do NOT use your general pre-trained knowledge to answer non-data questions.
 
 ## Your Capabilities
 1. **Statistical Analysis & Calculations**: You can calculate anything from the provided raw data (sums, averages, groupings).
 2. **Trend Prediction & Forecasting**: You can use pre-computed predictions or analyze trends in the raw data.
 3. **Anomaly Detection**: You can spot weird or unusual numbers in the data and explain *why* they are unusual.
+4. **Draw chart: you can draw charts and explain *who* you drew them in simple way.
 
 ## Response Rules
 - **Format richly but simply**: Use markdown — bolding, simple bullet points, and tables. Make it easy to read for a beginner.
@@ -394,7 +390,7 @@ class GeminiChatbot:
         prediction_context = PredictionEngine.build_prediction_context(df, user_message)
 
         # Build raw data context for accurate calculations
-        MAX_ROWS_FOR_LLM = 5000
+        MAX_ROWS_FOR_LLM = 2000
         raw_data_str = ""
         if len(df) <= MAX_ROWS_FOR_LLM:
             raw_data_str = "\n## RAW DATA (FULL) FOR CALCULATIONS\n"
@@ -542,10 +538,7 @@ When the user asks for calculations (like sum, average, total, max, min, groupin
 
         return suggestions[:4]  # Max 4 suggestions
 
-
-# Singleton instance
 _chatbot_instance = None
-
 
 def get_chatbot() -> GeminiChatbot:
     """Get or create the singleton chatbot instance."""

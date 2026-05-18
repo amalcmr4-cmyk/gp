@@ -9,7 +9,6 @@ import bcrypt
 import jwt
 from dotenv import load_dotenv
 
-#security Load secret configuration from environment variables, not hard-coded values
 env_path = Path(__file__).parent.parent.parent.parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
@@ -17,23 +16,19 @@ JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "change-me-secret-in-production")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
 REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7"))
-#security Password reset tokens expire in 1 hour by default
 RESET_TOKEN_EXPIRE_MINUTES = int(os.getenv("RESET_TOKEN_EXPIRE_MINUTES", "60"))
 ACCESS_TOKEN_TYPE = "access"
 REFRESH_TOKEN_TYPE = "refresh"
 
-#security In-memory token stores are acceptable for development, but production should use a persistent store.
 ACCESS_TOKEN_BLACKLIST = set()
 VALID_REFRESH_TOKENS = set()
 
 
 def hash_password(password: str) -> str:
-    #security Use bcrypt to hash passwords with a per-password salt, never store plain text.
     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 
 def verify_password(password: str, hashed_password: str) -> bool:
-    #security Verify password using bcrypt to avoid timing attacks based on string comparison.
     return bcrypt.checkpw(password.encode("utf-8"), hashed_password.encode("utf-8"))
 
 

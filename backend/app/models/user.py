@@ -9,6 +9,5 @@ class User(Base):
     email = Column(String, unique=True, nullable=False, index=True)
     hashed_password = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
-    #security Password reset token and expiry for secure password recovery flow
     reset_token = Column(String, nullable=True, unique=True)
     reset_token_expiry = Column(DateTime(timezone=True), nullable=True)

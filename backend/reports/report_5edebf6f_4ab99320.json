@@ -1,0 +1,62 @@
+{
+    "report_id": "4ab99320-4586-48ab-9065-527760f74779",
+    "file_info": {
+        "file_id": "5edebf6f",
+        "original_name": "train.csv",
+        "file_size_mb": 2.03,
+        "uploaded_at": "2026-05-17T17:22:42.586843"
+    },
+    "analysis_count": 3,
+    "generated_at": "2026-05-18T21:24:38.190705",
+    "analyses": [
+        {
+            "analysis_id": 643,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-17T17:23:16.256185",
+            "summary": {
+                "total_rows": 9800,
+                "total_columns": 18,
+                "quality_score": 99.99,
+                "warnings": [
+                    "High variance detected in 'Sales'"
+                ],
+                "insights": [
+                    "Excellent data quality"
+                ]
+            }
+        },
+        {
+            "analysis_id": 642,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-17T17:23:08.855098",
+            "summary": {
+                "total_rows": 9800,
+                "total_columns": 18,
+                "quality_score": 99.99,
+                "warnings": [
+                    "High variance detected in 'Sales'"
+                ],
+                "insights": [
+                    "Excellent data quality"
+                ]
+            }
+        },
+        {
+            "analysis_id": 641,
+            "analysis_type": "basic",
+            "status": "completed",
+            "date_time": "2026-05-17T17:23:01.632920",
+            "summary": {
+                "total_rows": 0,
+                "total_columns": 0,
+                "quality_score": 0,
+                "warnings": [
+                    "Low data quality"
+                ],
+                "insights": []
+            }
+        }
+    ]
+}

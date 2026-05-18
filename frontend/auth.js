@@ -1,4 +1,3 @@
-// Centralized auth helper for DataWizard (plain browser JS)
 (function () {
     'use strict';
 
@@ -63,7 +62,6 @@
         if (redirect) window.location.href = redirect;
     }
 
-    // Expose helper
     window.auth = {
         login: login,
         logout: logout,

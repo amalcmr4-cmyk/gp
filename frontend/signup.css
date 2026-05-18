@@ -163,27 +163,84 @@ button:hover {
 }
 .legend-item {
     display: flex;         
-  align-items: center;   
-  gap:2px;
-  padding:-1px;
-    transition: all 0.25s ease;
+    align-items: center;   
+    gap: 8px;
+    margin-top: 6px;
+    color: #a090b0; 
+    font-size: 13px;
+    transition: all 0.3s ease;
 }
+
 .legend-dot {
-    
-    width: 6px;
-    height: 6px;
-    min-width: 6px;
+    width: 8px;
+    height: 8px;
+    min-width: 8px;
     border-radius: 50%;
-    margin-top: 5px;
     flex-shrink: 0;
+    background: #ef4444; 
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.legend-dot.green-dot {
+.legend-item.met {
+    color: #4ade80; 
+    transform: translateX(3px); 
+}
+
+[dir="rtl"] .legend-item.met {
+    transform: translateX(-3px);
+}
+
+.legend-item.met .legend-dot {
     background: #4ade80;
-    box-shadow: 0 0 8px rgba(74, 222, 128, .6);
+    box-shadow: 0 0 12px rgba(74, 222, 128, 0.8); 
+    transform: scale(1.2); 
 }
+.toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    html[dir="rtl"] .toast-container {
+      right: auto;
+      left: 20px;
+    }
+    .dw-toast {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(30, 20, 60, 0.95);
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: 'Tajawal', sans-serif;
+      min-width: 280px;
+      max-width: 400px;
+      transform: translateX(120%);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+      opacity: 0;
+    }
+    html[dir="rtl"] .dw-toast {
+      transform: translateX(-120%);
+    }
+    .dw-toast.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    .dw-toast.success { border-left: 4px solid #4ade80; }
+    html[dir="rtl"] .dw-toast.success { border-left: none; border-right: 4px solid #4ade80; }
+    
+    .dw-toast.error { border-left: 4px solid #ef4444; }
+    html[dir="rtl"] .dw-toast.error { border-left: none; border-right: 4px solid #ef4444; }
 
-.legend-dot.red-dot {
-    background: #ef4444;
-    box-shadow: 0 0 8px rgba(239, 68, 68, .6);
-}
+    .dw-toast i { font-size: 1.2rem; }
+    .dw-toast.success i { color: #4ade80; }
+    .dw-toast.error i { color: #ef4444; }
+    .toast-message { font-size: 0.9rem; font-weight: 500; }
+    

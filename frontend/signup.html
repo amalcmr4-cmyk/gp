@@ -14,7 +14,7 @@
 </head>
 
 <body>
-
+  <div id="toastContainer" class="toast-container"></div>
   <div id="signupModal" class="modal" style="display: flex;">
 
     <div class="modal-content">
@@ -40,17 +40,19 @@
           <label for="password" data-i18n="password">Password</label>
           <input type="password" id="password" data-i18n-placeholder="passPlaceholder" placeholder="Enter password"
             required>
-          <div class="legend-item">
-            <span class="legend-dot red-dot"></span>
-            <strong class="con" data-i18n="passConditions1">At least 8 letters</strong>
-          </div>
-          <div class="legend-item">
-            <span class="legend-dot red-dot"></span>
-            <strong class="con" data-i18n="passConditions2">Contain Capital letter</strong>
-          </div>
-          <div class="legend-item">
-            <span class="legend-dot red-dot"></span>
-            <strong class="con" data-i18n="passConditions3">Contain Small letter</strong>
+          <div class="password-requirements">
+            <div class="legend-item" id="req-length">
+              <span class="legend-dot"></span>
+              <span data-i18n="passConditions1">At least 8 characters</span>
+            </div>
+            <div class="legend-item" id="req-uppercase">
+              <span class="legend-dot"></span>
+              <span data-i18n="passConditions2">At least one uppercase letter</span>
+            </div>
+            <div class="legend-item" id="req-lowercase">
+              <span class="legend-dot"></span>
+              <span data-i18n="passConditions3">At least one lowercase letter</span>
+            </div>
           </div>
         </div>
 
@@ -68,45 +70,97 @@
     </div>
   </div>
 
-<script>
-document.getElementById("signupForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
+  <script>
+    // دالة إظهار الـ Toast المرتبة
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `dw-toast ${type}`;
+      
+      const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
+      
+      toast.innerHTML = `
+        <i class="fa-solid ${icon}"></i>
+        <span class="toast-message">${message}</span>
+      `;
+      
+      container.appendChild(toast);
+      
+      // أنيميشن الدخول
+      setTimeout(() => toast.classList.add('show'), 50);
+      
+      // الحذف التلقائي بعد 4 ثوانٍ
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+      }, 4000);
+    }
 
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+    // دالة فحص شروط كلمة المرور وإضافة كلاس met للتحول للأخضر
+    const passwordInput = document.getElementById('password');
+    passwordInput.addEventListener('input', function() {
+      const value = this.value;
+      
+      const checks = {
+        length: value.length >= 8,
+        uppercase: /[A-Z]/.test(value),
+        lowercase: /[a-z]/.test(value),
+        digit: /[0-9]/.test(value)
+      };
 
-    const btn = this.querySelector('button[type="submit"]');
-    btn.innerHTML = "Creating account...";
-    btn.disabled = true;
+      document.getElementById('req-length').classList.toggle('met', checks.length);
+      document.getElementById('req-uppercase').classList.toggle('met', checks.uppercase);
+      document.getElementById('req-lowercase').classList.toggle('met', checks.lowercase);
+      document.getElementById('req-digit').classList.toggle('met', checks.digit);
+    });
 
-    try {
+    // حدث إرسال الفورم
+    document.getElementById("signupForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      // التأكد من استيفاء جميع الشروط قبل الإرسال
+      const password = passwordInput.value;
+      const isPasswordValid = password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password);
+      
+      if (!isPasswordValid) {
+        showToast("Please meet all password requirements first.", "error");
+        return;
+      }
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+
+      const btn = this.querySelector('button[type="submit"]');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Creating account...`;
+      btn.disabled = true;
+
+      try {
         const res = await fetch("http://127.0.0.1:8000/auth/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ email, password })
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
         });
 
         const data = await res.json();
 
         if (!res.ok) {
-            alert(data.detail || "Signup failed");
-            btn.innerHTML = "Sign Up";
-            btn.disabled = false;
-            return;
+          showToast(data.detail || "Signup failed", "error");
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          return;
         }
 
-        alert("Account created successfully");
+        showToast("Account created successfully! Redirecting...", "success");
+        
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
 
-        // بعد النجاح نروح login
-        window.location.href = "login.html";
-
-    } catch (err) {
-        alert("Server error");
-        btn.innerHTML = "Sign Up";
+      } catch (err) {
+        showToast("Server error. Please try again later.", "error");
+        btn.innerHTML = originalText;
         btn.disabled = false;
-    }
-});
-</script>
+      }
+    });
+  </script>

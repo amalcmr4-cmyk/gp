@@ -148,11 +148,11 @@ body {
 }
 .page-title-row h2 {
     font-size:2rem; font-weight:800;
-    background:linear-gradient(90deg,var(--accent-glow),var(--magic-purple));
+    background:linear-gradient(90deg,var(--accent),var(--magic-purple));
     -webkit-background-clip:text; background-clip:text; color:transparent;
     display:flex; align-items:center; gap:.5rem;
 }
-.page-subtitle { color:#c9bcf5; font-size:1rem; margin-top:.4rem; }
+.page-subtitle { color:#726b8b; font-size:1rem; margin-top:.4rem; }
 .clear-all-btn { font-size:.88rem; padding:.5rem 1rem; }
 
 /* History Grid */
@@ -264,7 +264,6 @@ body {
     text-align:center; color:#d0c0ff; font-size:.95rem;
 }
 
-/* ═══════════ RTL Support ═══════════ */
 [dir="rtl"] body { text-align: right; }
 [dir="rtl"] .sidebar { inset: 0 0 0 auto; transform: translateX(100%); }
 [dir="rtl"] .sidebar.open { transform: translateX(0); }

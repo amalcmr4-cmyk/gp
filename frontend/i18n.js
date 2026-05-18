@@ -3,13 +3,11 @@
     'use strict';
 
     const dict = {
-        // ── Navbar & General ──
         signUp:          { en: 'Sign Up',              ar: 'إنشاء حساب' },
         logIn:           { en: 'Log In',               ar: 'تسجيل الدخول' },
         newAnalysis:     { en: 'New Analysis',         ar: 'تحليل جديد' },
         saveReport:      { en: 'Save Report',          ar: 'حفظ التقرير' },
 
-        // ── Sidebar ──
         newChat:         { en: 'New Chat',             ar: 'محادثة جديدة' },
         newUpload:       { en: 'New Upload',           ar: 'رفع جديد' },
         uploadNew:       { en: 'Upload New Data',      ar: 'رفع بيانات جديدة' },
@@ -20,7 +18,6 @@
         settings:        { en: 'Settings',             ar: 'الإعدادات' },
         terms:           { en: 'Terms & Policies',     ar: 'الشروط والسياسات' },
 
-        // ── Home Page ──
         heroTry:         { en: 'Try',                  ar: 'جرّب' },
         heroSubtitle:    { en: 'and uncover the hidden magic in your data in seconds', ar: 'واكتشف السحر المخفي في بياناتك خلال ثوانٍ' },
         uploadTitle:     { en: 'Upload your data file here', ar: 'ارفع ملف بياناتك هنا' },
@@ -32,7 +29,6 @@
         enterFileName:   { en: 'Enter file name...',   ar: 'أدخل اسم الملف...' },
         continueToAnalysis: { en: 'Continue to Analysis', ar: 'متابعة التحليل' },
 
-        // ── Steps Cards ──
         step1Title:      { en: 'Secure Upload',        ar: 'رفع آمن' },
         step1Desc:       { en: 'Your data is processed in memory and encrypted. We never train our models on your private data.', ar: 'بياناتك تُعالج في الذاكرة ومشفّرة. لا نستخدم بياناتك الخاصة في تدريب نماذجنا.' },
         step2Title:      { en: 'AI-Powered Analysis',   ar: 'تحليل بالذكاء الاصطناعي' },
@@ -41,7 +37,6 @@
         step3Title:      { en: 'Actionable Insights',   ar: 'رؤى قابلة للتنفيذ' },
         step3Desc:       { en: 'Beautifully rendered visualizations and clear, strategic recommendations ready for your presentation.', ar: 'رسوم بيانية جميلة وتوصيات استراتيجية واضحة جاهزة لعرضك التقديمي.' },
 
-        // ── Footer ──
         encryption:      { en: '256-bit Encryption',   ar: 'تشفير 256-بت' },
         dataNotStored:   { en: 'Data Never Stored',    ar: 'البيانات لا تُخزّن' },
         gdpr:            { en: 'GDPR Compliant',       ar: 'متوافق مع GDPR' },
@@ -49,7 +44,6 @@
         footerPrivacy:   { en: 'Your data privacy & security is our top priority', ar: 'خصوصية وأمان بياناتك هي أولويتنا القصوى' },
         footerBiz:       { en: '© 2026 DataWizard – Business Analytics Platform', ar: '© 2026 DataWizard – منصة تحليل الأعمال' },
 
-        // ── Login Page ──
         welcomeBack:     { en: 'Welcome Back',         ar: 'مرحباً بعودتك' },
         signInAccount:   { en: 'Sign in to your account', ar: 'سجّل دخولك إلى حسابك' },
         email:           { en: 'Email',                ar: 'البريد الإلكتروني' },
@@ -62,14 +56,13 @@
         signUpLink:      { en: 'Sign up',              ar: 'إنشاء حساب' },
         authenticating:  { en: 'Authenticating...',     ar: 'جارٍ التحقق...' },
 
-        // ── Signup Page ──
         signUpTitle:     { en: 'Sign Up',              ar: 'إنشاء حساب' },
         signUpSubtitle:  { en: "Let's get started with your 30 days free trial", ar: 'لنبدأ مع فترتك التجريبية المجانية لمدة 30 يوم' },
         name:            { en: 'Name',                 ar: 'الاسم' },
         namePlaceholder: { en: 'Enter your name',      ar: 'أدخل اسمك' },
-        passConditions1: {en: 'At least 8 letters', ar:"على الأقل 8 احرف"},
-        passConditions2: {en: 'Contain capital letter', ar:" يحتوي على حرف كبير"},
-        passConditions3: {en: 'Contain small letter', ar:" يحتوي على حرف صغير"},
+        passConditions1: {en: 'At least 8 characters', ar:"على الأقل 8 احرف"},
+        passConditions2: {en: 'At least one uppercase letter', ar:" يحتوي على حرف كبير"},
+        passConditions3: {en: 'At least one lowercase letter', ar:" يحتوي على حرف صغير"},
         signUpBtn:       { en: 'Sign Up',              ar: 'إنشاء حساب' },
         alreadyAccount:  { en: 'Already have an account?', ar: 'لديك حساب بالفعل؟' },
         logInLink:       { en: 'Log In',               ar: 'تسجيل الدخول' },
@@ -80,7 +73,6 @@
         creatingAccount: { en: 'Creating Account...',   ar: 'جارٍ إنشاء الحساب...' },
 
 
-        // ── History Page ──
         historyTitle:    { en: 'Analysis History',     ar: 'سجل التحليلات' },
         historySubtitle: { en: 'Your recent analysis sessions (stored locally)', ar: 'جلسات التحليل الأخيرة (مخزنة محلياً)' },
         clearAll:        { en: 'Clear All',            ar: 'مسح الكل' },
@@ -97,7 +89,6 @@
         rows:            { en: 'rows',                 ar: 'صفوف' },
         columns:         { en: 'columns',              ar: 'أعمدة' },
 
-        // ── Analysis Page ──
         fileName:        { en: 'File Name',            ar: 'اسم الملف' },
         totalRows:       { en: 'Total Rows',           ar: 'إجمالي الصفوف' },
         totalCols:       { en: 'Total Columns',        ar: 'إجمالي الأعمدة' },
@@ -148,7 +139,6 @@
         exportServerPDF: { en: 'Download PDF Report',   ar: 'تحميل تقرير PDF' },
         exportServerPDFDesc: { en: 'Generated by AI DataWizard', ar: 'مُنشأ بواسطة DataWizard AI' },
 
-        // ── Report Page ──
         execAudit:       { en: 'Executive Data Audit',  ar: 'تدقيق البيانات التنفيذي' },
         reportId:        { en: 'Report ID',             ar: 'معرّف التقرير' },
         generatedOn:     { en: 'Generated on',          ar: 'أُنشئ في' },
@@ -163,7 +153,6 @@
         rowsLabel:       { en: 'Rows',                  ar: 'صفوف' },
         colsLabel:       { en: 'Cols',                  ar: 'أعمدة' },
 
-        // ── Chatbot ──
         chatTitle:       { en: 'DataWizard AI',         ar: 'DataWizard AI' },
         chatWelcomeTitle:{ en: 'DataWizard AI Analyst',  ar: 'محلل DataWizard الذكي' },
         chatWelcomeSub:  { en: "Hello! I'm your smart data analyst. You can ask me anything about your data (calculations, sales, predictions).", ar: 'مرحباً! أنا محلل البيانات الذكي الخاص بك. يمكنك سؤالي عن أي شيء يخص بياناتك (حسابات، مبيعات، توقعات).' },
@@ -184,7 +173,6 @@
         chatServerError: { en: 'A server error occurred while fetching the answer.', ar: 'حدث خطأ في الخادم أثناء جلب الإجابة.' },
         chatConnError:   { en: '⚠️ Connection error: ', ar: '⚠️ خطأ في الاتصال: ' },
 
-        // ── Toasts ──
         selectFileFirst: { en: 'Please select a file first', ar: 'الرجاء اختيار ملف أولاً' },
         uploadSuccess:   { en: 'File uploaded successfully!', ar: 'تم رفع الملف بنجاح!' },
         uploadError:     { en: 'Error: ',               ar: 'خطأ: ' },
@@ -479,10 +467,6 @@
         }
     }
 
-    // ═══════════════════════════════════════════════════
-    //  Initialize on DOM Ready
-    // ═══════════════════════════════════════════════════
-
     function initI18n() {
         const lang = getCurrentLang();
         const html = document.documentElement;
@@ -500,14 +484,10 @@
     }
 
 
-    // Re-initialize auth UI when auth state changes
     window.addEventListener('auth-changed', () => {
-        try { initI18n(); } catch (e) { /* ignore */ }
+        try { initI18n(); } catch (e) {}
     });
 
-    // ═══════════════════════════════════════════════════
-    //  Expose globally
-    // ═══════════════════════════════════════════════════
     window.t = t;
     window.getCurrentLang = getCurrentLang;
     window.setLanguage = setLanguage;

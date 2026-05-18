@@ -1,0 +1,64 @@
+{
+    "report_id": "6672adf6-170a-4adb-931a-f2954f2d37d7",
+    "file_info": {
+        "file_id": "4aa3d5cc",
+        "original_name": "DataWizard_Forecasting_Sample.xlsx",
+        "file_size_mb": 0.01,
+        "uploaded_at": "2026-05-17T08:53:53.365506"
+    },
+    "analysis_count": 3,
+    "generated_at": "2026-05-18T21:27:59.947803",
+    "analyses": [
+        {
+            "analysis_id": 637,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-17T08:54:24.124278",
+            "summary": {
+                "total_rows": 9,
+                "total_columns": 10,
+                "quality_score": 90.0,
+                "warnings": [
+                    "High variance detected in 'Unit_Price'",
+                    "High variance detected in 'Discount_Amount'"
+                ],
+                "insights": [
+                    "Excellent data quality"
+                ]
+            }
+        },
+        {
+            "analysis_id": 636,
+            "analysis_type": "advanced_analysis",
+            "status": "completed",
+            "date_time": "2026-05-17T08:54:06.095665",
+            "summary": {
+                "total_rows": 9,
+                "total_columns": 10,
+                "quality_score": 90.0,
+                "warnings": [
+                    "High variance detected in 'Unit_Price'",
+                    "High variance detected in 'Discount_Amount'"
+                ],
+                "insights": [
+                    "Excellent data quality"
+                ]
+            }
+        },
+        {
+            "analysis_id": 635,
+            "analysis_type": "basic",
+            "status": "completed",
+            "date_time": "2026-05-17T08:54:05.700125",
+            "summary": {
+                "total_rows": 0,
+                "total_columns": 0,
+                "quality_score": 0,
+                "warnings": [
+                    "Low data quality"
+                ],
+                "insights": []
+            }
+        }
+    ]
+}

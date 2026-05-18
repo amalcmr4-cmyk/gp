@@ -80,9 +80,6 @@
         return html;
     }
 
-    // ═══════════════════════════════════════════════════
-    //  Init
-    // ═══════════════════════════════════════════════════
     function initChatbot() {
         if (document.getElementById('dw-chat-widget')) return;
 
@@ -183,7 +180,6 @@
             document.getElementById('dw-suggestions-container').innerHTML = '';
         });
 
-        // Welcome chip clicks
         document.querySelectorAll('.dw-welcome-chip').forEach(chip => {
             chip.addEventListener('click', () => {
                 chatInput.value = chip.dataset.query;
@@ -193,9 +189,6 @@
         });
     }
 
-    // ═══════════════════════════════════════════════════
-    //  Helpers
-    // ═══════════════════════════════════════════════════
     function getFileId() {
         const params = new URLSearchParams(window.location.search);
         return params.get('id') || params.get('file_id') || localStorage.getItem('last_file_id');
@@ -206,9 +199,6 @@
         if (msgs) msgs.scrollTop = msgs.scrollHeight;
     }
 
-    // ═══════════════════════════════════════════════════
-    //  Send Message
-    // ═══════════════════════════════════════════════════
     async function sendMessage() {
         const input = document.getElementById('dw-chat-input');
         const text = input.value.trim();
@@ -279,9 +269,6 @@
         }
     }
 
-    // ═══════════════════════════════════════════════════
-    //  Append Message
-    // ═══════════════════════════════════════════════════
     function appendMessage(text, type) {
         const msgs = document.getElementById('dw-chat-messages');
         const msgDiv = document.createElement('div');
@@ -318,9 +305,6 @@
         return msgDiv;
     }
 
-    // ═══════════════════════════════════════════════════
-    //  Typewriter Effect
-    // ═══════════════════════════════════════════════════
     async function typewriterAppend(fullText) {
         const msgs = document.getElementById('dw-chat-messages');
         const msgDiv = document.createElement('div');
@@ -372,9 +356,6 @@
         return new Promise(r => setTimeout(r, ms));
     }
 
-    // ═══════════════════════════════════════════════════
-    //  Thinking Indicator
-    // ═══════════════════════════════════════════════════
     function showThinking() {
         const msgs = document.getElementById('dw-chat-messages');
         const el = document.createElement('div');
@@ -397,9 +378,6 @@
         if (el && el.parentNode) el.remove();
     }
 
-    // ═══════════════════════════════════════════════════
-    //  Suggestion Chips
-    // ═══════════════════════════════════════════════════
     function showSuggestions(suggestions) {
         const container = document.getElementById('dw-suggestions-container');
         container.innerHTML = '';
@@ -422,9 +400,6 @@
         container.appendChild(row);
     }
 
-    // ═══════════════════════════════════════════════════
-    //  Boot
-    // ═══════════════════════════════════════════════════
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initChatbot);
     } else {

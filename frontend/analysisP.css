@@ -620,6 +620,7 @@ body {
     border-top: 1px solid rgba(255, 255, 255, .35);
     border-radius: 16px;
     padding: 1.8rem;
+    margin-top: 30px;
     backdrop-filter: blur(24px) saturate(180%);
     box-shadow: 0 10px 30px rgba(0, 0, 0, .5), inset 0 2px 4px rgba(255, 255, 255, .1);
 }
@@ -1956,4 +1957,80 @@ body {
     .content {
         padding-top: 11rem;
     }
+}
+/* تنسيق خيارات التنظيف */
+.clean-options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 1.5rem 0;
+}
+
+.clean-option-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.clean-option-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(168, 85, 247, 0.4); /* لون البنفسجي السحري الخاص بك */
+}
+
+/* عندما يتم اختيار الخيار */
+.clean-option-card input[type="radio"]:checked + .option-content {
+    color: #fff;
+}
+
+.clean-option-card input[type="radio"] {
+    accent-color: #a855f7; /* لون الراديو يتناسق مع السحر */
+    margin-top: 4px;
+    transform: scale(1.2);
+}
+
+.option-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.option-content strong {
+    font-size: 0.95rem;
+    color: #f3f4f6;
+}
+
+.option-content span {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    line-height: 1.4;
+}
+
+/* صندوق التحذير */
+.clean-warning-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.25);
+    padding: 12px;
+    border-radius: 10px;
+    margin-top: 1rem;
+}
+
+.clean-warning-box i {
+    color: #fbbf24;
+    font-size: 1.4rem;
+}
+
+.clean-warning-box p {
+    font-size: 0.8rem;
+    color: #f59e0b;
+    margin: 0;
+    line-height: 1.4;
 }

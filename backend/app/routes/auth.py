@@ -46,7 +46,6 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)) -> UserRespon
             detail="Email is already registered.",
         )
 
-    #security Hash passwords with bcrypt before saving to the database.
     hashed_password = hash_password(user.password)
     new_user = User(email=user.email, hashed_password=hashed_password)
     db.add(new_user)
@@ -67,7 +66,6 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)) -> UserRespon
 def login_user(login: UserLogin, db: Session = Depends(get_db)) -> TokenResponse:
     user = db.query(User).filter(User.email == login.email).first()
     if user is None or not verify_password(login.password, user.hashed_password):
-        #security Do not reveal whether the email or password was incorrect.
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password.",

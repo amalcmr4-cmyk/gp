@@ -17,9 +17,6 @@
     --chat-surface: rgba(255, 255, 255, 0.03);
 }
 
-/* ═══════════════════════════════════════════════════
-   Floating Toggle Button
-   ═══════════════════════════════════════════════════ */
 #dw-chat-toggle {
     position: fixed;
     bottom: 28px;
@@ -89,9 +86,6 @@
     font-weight: 800;
 }
 
-/* ═══════════════════════════════════════════════════
-   Chat Body Layout
-   ═══════════════════════════════════════════════════ */
 #dw-chat-body {
     display: flex;
     flex-direction: column;
@@ -100,9 +94,6 @@
     min-height: 0;
 }
 
-/* ═══════════════════════════════════════════════════
-   Chat Window — Normal Mode
-   ═══════════════════════════════════════════════════ */
 #dw-chat-window {
     position: fixed;
     bottom: 100px;
@@ -136,7 +127,6 @@
     pointer-events: auto;
 }
 
-/* ═══════════ Expanded (Full-screen) Mode ═══════════ */
 #dw-chat-window.expanded {
     bottom: 0;
     right: 0;
@@ -159,9 +149,6 @@
     width: 100%;
 }
 
-/* ═══════════════════════════════════════════════════
-   Chat Header
-   ═══════════════════════════════════════════════════ */
 .dw-chat-header {
     padding: 16px 20px;
     background: linear-gradient(180deg, rgba(142, 45, 226, 0.12), transparent);
@@ -263,9 +250,6 @@
     border-color: var(--chat-primary);
 }
 
-/* ═══════════════════════════════════════════════════
-   Welcome Screen
-   ═══════════════════════════════════════════════════ */
 .dw-welcome-screen {
     display: flex;
     flex-direction: column;
@@ -344,9 +328,6 @@
     box-shadow: 0 4px 15px rgba(142, 45, 226, 0.2);
 }
 
-/* ═══════════════════════════════════════════════════
-   Messages Container
-   ═══════════════════════════════════════════════════ */
 .dw-chat-messages {
     flex-grow: 1;
     padding: 20px;
@@ -371,9 +352,6 @@
     background: transparent;
 }
 
-/* ═══════════════════════════════════════════════════
-   Message Bubbles
-   ═══════════════════════════════════════════════════ */
 .dw-chat-msg {
     max-width: 88%;
     padding: 14px 18px;
@@ -423,7 +401,6 @@
     color: #fca5a5;
 }
 
-/* ═══════ AI Message Internal Label ═══════ */
 .dw-msg-label {
     display: flex;
     align-items: center;
@@ -441,7 +418,6 @@
     font-size: 10px;
 }
 
-/* ═══════ Message Actions Bar ═══════ */
 .dw-msg-actions {
     display: flex;
     gap: 4px;
@@ -474,11 +450,6 @@
     color: white;
 }
 
-/* ═══════════════════════════════════════════════════
-   Rich Content Rendering inside AI Messages
-   ═══════════════════════════════════════════════════ */
-
-/* Bold & Italic */
 .dw-chat-msg.ai strong {
     color: #e0d0ff;
 }
@@ -521,7 +492,6 @@
     margin: 10px 0 4px;
 }
 
-/* Message content wrapper */
 .dw-msg-content {
     line-height: 1.7;
 }
@@ -530,7 +500,6 @@
     display: none;
 }
 
-/* Thinking message state */
 .dw-thinking-msg {
     border-color: rgba(142, 45, 226, 0.15) !important;
     background: rgba(142, 45, 226, 0.04) !important;
@@ -631,9 +600,6 @@
     margin: 12px 0;
 }
 
-/* ═══════════════════════════════════════════════════
-   Suggestion Chips
-   ═══════════════════════════════════════════════════ */
 .dw-suggestions-row {
     display: flex;
     gap: 8px;
@@ -682,9 +648,6 @@
     color: white;
 }
 
-/* ═══════════════════════════════════════════════════
-   Thinking Indicator
-   ═══════════════════════════════════════════════════ */
 .dw-thinking-indicator {
     display: flex;
     align-items: center;
@@ -766,9 +729,6 @@
     }
 }
 
-/* ═══════════════════════════════════════════════════
-   Chat Input Area
-   ═══════════════════════════════════════════════════ */
 .dw-chat-input-area {
     padding: 14px 16px;
     background: rgba(0, 0, 0, 0.15);
@@ -839,9 +799,6 @@
     box-shadow: none;
 }
 
-/* ═══════════════════════════════════════════════════
-   Typewriter Cursor
-   ═══════════════════════════════════════════════════ */
 .dw-typewriter-cursor {
     display: inline-block;
     width: 2px;
@@ -864,9 +821,6 @@
     }
 }
 
-/* ═══════════════════════════════════════════════════
-   Responsive
-   ═══════════════════════════════════════════════════ */
 @media (max-width: 480px) {
     #dw-chat-window {
         bottom: 0;
@@ -898,7 +852,7 @@
     }
 }
 
-/* ═══════════ RTL Support ═══════════ */
+
 [dir="rtl"] #dw-chat-toggle { right: auto; left: 28px; }
 [dir="rtl"] #dw-chat-window { right: auto; left: 28px; }
 

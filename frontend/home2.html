@@ -96,7 +96,7 @@
                 <div id="file-preview" style="display: none; margin: 1.2rem 0;">
                     <i id="file-icon" class="fas fa-file" style="font-size: 2.8rem; color: var(--accent);"></i>
                     <p id="file-name-display"
-                        style="margin-top: 0.5rem; color: #d4c2ff; font-size: 0.95rem; font-weight: 500;">
+                        style="margin-top: 0.5rem; color: #5e5671; font-size: 0.95rem; font-weight: 500;">
                         <span data-i18n="noFileSelected">No file selected</span>
                     </p>
                 </div>
@@ -134,20 +134,7 @@
     </main>
     <footer class="page-footer">
         <div class="footer-content">
-            <div class="security-badges">
-                <div class="security-item">
-                    <i class="fas fa-lock"></i>
-                    <span data-i18n="encryption">256-bit Encryption</span>
-                </div>
-                <div class="security-item">
-                    <i class="fas fa-user-shield"></i>
-                    <span data-i18n="gdpr">GDPR Compliant</span>
-                </div>
-            </div>
-
-            <div class="footer-extra">
                 <p data-i18n="footerRights">© 2026 DataWizard – All rights reserved.</p>
-                <p data-i18n="footerPrivacy">Your data privacy & security is our top priority</p>
             </div>
         </div>
     </footer>
@@ -255,7 +242,6 @@
                     
                     showToast(t('uploadSuccess'), "success");
                     
-                    // Show custom name modal
                     document.getElementById('customFileNameInput').value = selectedFile.name;
                     document.getElementById('filenameModal').style.display = 'flex';
                     
@@ -281,7 +267,6 @@
                 handleFileSelected(this.files[0]);
             });
 
-            // Drag & Drop
             uploadZone.addEventListener("dragover", function (e) {
                 e.preventDefault();
                 uploadZone.classList.add("drag-over");
@@ -304,7 +289,6 @@
             });
 
             uploadZone.addEventListener("click", function (e) {
-                // Only open file dialog if no file selected and not clicking the analyze button or the preview area
                 if (
                     !selectedFile &&
                     e.target.tagName !== "INPUT" &&
@@ -326,7 +310,6 @@
             }
             
 
-            // Sidebar toggle 
             const sidebar = document.getElementById('sidebar');
             const openBtn = document.getElementById('openSidebar');
             const closeBtn = document.getElementById('closeSidebar');
@@ -345,7 +328,6 @@
                 }
             });
 
-            // Logout handling — delegate to central auth helper when available
             const logoutBtn = document.getElementById('logoutBtn');
             if (logoutBtn) logoutBtn.addEventListener('click', () => {
                 if (window.auth && typeof window.auth.logout === 'function') {

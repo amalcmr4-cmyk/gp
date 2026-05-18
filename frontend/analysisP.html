@@ -20,7 +20,6 @@
 
 <body>
 
-    <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <button class="close-btn" id="closeSidebar">×</button>
@@ -45,12 +44,12 @@
             <div class="nav-item">
                 <i class="fas fa-shield-alt"></i> <a href="terms.html" data-i18n="terms">Terms & Policies</a>
             </div>
-            <div class="nav-item"><button id="logoutBtn" class="btn" style="background:#ef4444;color:white;border-color:rgba(239,68,68,.5);">Logout</button></div>
+            <div class="nav-item"><button id="logoutBtn" class="btn"
+                    style="background:#ef4444;color:white;border-color:rgba(239,68,68,.5);">Logout</button></div>
             <div class="copyright">© 2026 DataWizard</div>
         </div>
     </aside>
 
-    <!-- ===== NAVBAR ===== -->
     <header class="navbar">
         <div class="logo">
             <button class="menu-toggle" id="openSidebar"><i class="fas fa-bars"></i></button>
@@ -64,7 +63,6 @@
         </div>
     </header>
 
-    <!-- ===== KPI STRIP ===== -->
     <div class="kpi-strip" id="kpi-strip" style="display:none;">
         <div class="kpi-item kpi-file">
             <i class="fas fa-file-csv kpi-icon" style="color:#34d399;"></i>
@@ -111,13 +109,11 @@
 
     </div>
 
-    <!-- ===== LOADING ===== -->
     <div id="loading-overlay" class="loading-overlay">
         <div class="spinner"></div>
         <p data-i18n="loadingMsg">The Wizard is analyzing your data...</p>
     </div>
 
-    <!-- ===== ERROR OVERLAY ===== -->
     <div id="error-overlay" class="error-overlay" style="display:none;">
         <div class="error-card">
             <div class="error-icon-wrap"><i class="fas fa-triangle-exclamation"></i></div>
@@ -128,7 +124,6 @@
         </div>
     </div>
 
-    <!-- ===== EXPORT MODAL ===== -->
     <div id="export-modal" class="modal-overlay" style="display:none;" onclick="closeExportModal(event)">
         <div class="modal-card">
             <button class="modal-close-btn" onclick="closeExportModal()"><i class="fas fa-times"></i></button>
@@ -155,7 +150,6 @@
         </div>
     </div>
 
-    <!-- ===== MAIN CONTENT ===== -->
     <main class="content" id="main-content" style="display:none;">
 
         <div class="mode-selector">
@@ -178,17 +172,76 @@
                     <div class="table-controls">
                         <div class="search-box">
                             <i class="fas fa-magnifying-glass"></i>
-                            <input type="text" id="table-search" data-i18n-placeholder="searchData" placeholder="Search data..."
-                                oninput="onTableSearch(this.value)">
+                            <input type="text" id="table-search" data-i18n-placeholder="searchData"
+                                placeholder="Search data..." oninput="onTableSearch(this.value)">
                         </div>
                         <select id="page-size-select" onchange="onPageSizeChange(this.value)" class="page-size-select">
                             <option value="10" data-i18n-rows="10">10 rows</option>
                             <option value="25" data-i18n-rows="25">25 rows</option>
                             <option value="50" data-i18n-rows="50">50 rows</option>
                         </select>
-                        <button class="btn primary" onclick="cleanData()" id="btn-clean" style="margin-right:8px;">
-                            <i class="fas fa-broom"></i> <span data-i18n="cleanData">Clean Data</span>
+                        <button class="btn primary" onclick="openCleanModal()" id="btn-clean" style="margin-right:8px;">
+                            <i class="fas fa-broom"></i> <span data-i18n="cleanData">Fix Data</span>
                         </button>
+                        <div id="clean-modal" class="modal-overlay" style="display:none;"
+                            onclick="closeCleanModal(event)">
+                            <div class="modal-card clean-card">
+                                <button class="modal-close-btn" onclick="closeCleanModal()"><i
+                                        class="fas fa-times"></i></button>
+                                <div class="modal-icon" style="background: rgba(52, 211, 153, 0.1); color: #34d399;"><i
+                                        class="fas fa-broom"></i></div>
+                                <h3 data-i18n="cleanDataTitle">Smart Data Cleaning</h3>
+                                <p class="modal-subtitle" data-i18n="cleanSubtitle">Select a cleaning action to optimize
+                                    your dataset</p>
+
+                                <div class="clean-options-grid">
+                                    <label class="clean-option-card">
+                                        <input type="radio" name="cleanAction" value="fill_mean" checked>
+                                        <div class="option-content">
+                                            <i class="fas fa-calculator option-icon" style="color:#60a5fa;"></i>
+                                            <strong>Fill Missing with Mean</strong>
+                                            <span>Replaces empty cells in numeric columns with the average value. Keeps
+                                                data balance.</span>
+                                        </div>
+                                    </label>
+
+                                    <label class="clean-option-card">
+                                        <input type="radio" name="cleanAction" value="drop_missing">
+                                        <div class="option-content">
+                                            <i class="fas fa-trash-alt option-icon" style="color:#f87171;"></i>
+                                            <strong>Drop Missing Rows</strong>
+                                            <span>Completely removes any row containing missing fields. Best for
+                                                high-accuracy models.</span>
+                                        </div>
+                                    </label>
+
+                                    <label class="clean-option-card">
+                                        <input type="radio" name="cleanAction" value="drop_outliers">
+                                        <div class="option-content">
+                                            <i class="fas fa-filter option-icon" style="color:#fbbf24;"></i>
+                                            <strong>Remove Outliers</strong>
+                                            <span>Filters out extreme anomalies and noise using statistical boundaries
+                                                (IQR).</span>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="clean-warning-box">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <p><strong>Warning:</strong> Clicking "Apply & Re-analyze" will trigger an immediate
+                                        recalculation. Your dataset will be updated, and AI metrics will refresh on the
+                                        spot.</p>
+                                </div>
+
+                                <div class="modal-actions"
+                                    style="display: flex; gap: 12px; margin-top: 1.5rem; justify-content: flex-end;">
+                                    <button class="btn" onclick="closeCleanModal()"
+                                        style="background: rgba(255,255,255,0.05); color: #fff;">Cancel</button>
+                                    <button class="btn primary" onclick="submitCleanData()"><i class="fas fa-play"></i>
+                                        Apply & Re-analyze</button>
+                                </div>
+                            </div>
+                        </div>
                         <button class="btn export-csv-btn" onclick="exportTableCSV()">
                             <i class="fas fa-file-csv"></i> <span data-i18n="exportCSV">Export CSV</span>
                         </button>
@@ -209,10 +262,6 @@
 
         <!-- ===== ADVANCED VIEW ===== -->
         <div id="view-advanced" class="analysis-view" style="display:none;">
-
-
-            
-
             <div class="two-column-layout">
                 <!-- Numeric Statistics (Accordion) -->
                 <div class="glass-card" id="numeric-card" style="margin:0; display:flex; flex-direction:column;">
@@ -367,41 +416,47 @@
 
                 <!-- Legend Section -->
                 <div class="insights-legend" id="insights-legend">
-                    <h4><i class="fas fa-info-circle"></i> <span data-i18n="legendTitle">Understanding the Indicators</span></h4>
+                    <h4><i class="fas fa-info-circle"></i> <span data-i18n="legendTitle">Understanding the
+                            Indicators</span></h4>
                     <div class="legend-grid">
                         <div class="legend-item">
                             <span class="legend-dot green-dot"></span>
                             <div class="legend-text">
                                 <strong data-i18n="legendGreenDot">Green Dot</strong>
-                                <p data-i18n="legendGreenDotDesc">Indicates a positive or stable metric. The insight in this card reflects normal or healthy business performance.</p>
+                                <p data-i18n="legendGreenDotDesc">Indicates a positive or stable metric. The insight in
+                                    this card reflects normal or healthy business performance.</p>
                             </div>
                         </div>
                         <div class="legend-item">
                             <span class="legend-dot red-dot"></span>
                             <div class="legend-text">
                                 <strong data-i18n="legendRedDot">Red Dot</strong>
-                                <p data-i18n="legendRedDotDesc">Indicates a risk or warning. The insight in this card highlights potential issues or negative trends that require attention.</p>
+                                <p data-i18n="legendRedDotDesc">Indicates a risk or warning. The insight in this card
+                                    highlights potential issues or negative trends that require attention.</p>
                             </div>
                         </div>
                         <div class="legend-item">
                             <span class="legend-badge high-badge">High</span>
                             <div class="legend-text">
                                 <strong data-i18n="legendHigh">High Confidence</strong>
-                                <p data-i18n="legendHighDesc">The AI generated a detailed and comprehensive insight with strong data support. The analysis is thorough and reliable.</p>
+                                <p data-i18n="legendHighDesc">The AI generated a detailed and comprehensive insight with
+                                    strong data support. The analysis is thorough and reliable.</p>
                             </div>
                         </div>
                         <div class="legend-item">
                             <span class="legend-badge medium-badge">Medium</span>
                             <div class="legend-text">
                                 <strong data-i18n="legendMedium">Medium Confidence</strong>
-                                <p data-i18n="legendMediumDesc">The AI provided a moderate-length insight. The data may be partially available or the pattern is not fully clear.</p>
+                                <p data-i18n="legendMediumDesc">The AI provided a moderate-length insight. The data may
+                                    be partially available or the pattern is not fully clear.</p>
                             </div>
                         </div>
                         <div class="legend-item">
                             <span class="legend-badge low-badge">Low</span>
                             <div class="legend-text">
                                 <strong data-i18n="legendLow">Low Confidence</strong>
-                                <p data-i18n="legendLowDesc">The AI generated a brief or limited insight. The available data may be insufficient for a detailed analysis.</p>
+                                <p data-i18n="legendLowDesc">The AI generated a brief or limited insight. The available
+                                    data may be insufficient for a detailed analysis.</p>
                             </div>
                         </div>
                     </div>
@@ -416,9 +471,6 @@
     </footer>
 
     <script>
-        // ============================================================
-        // Mode Switch
-        // ============================================================
         window.switchMode = (mode) => {
             document.getElementById('view-basic').style.display = mode === 'basic' ? 'block' : 'none';
             document.getElementById('view-advanced').style.display = mode === 'advanced' ? 'block' : 'none';
@@ -426,9 +478,6 @@
             document.getElementById('btn-advanced').classList.toggle('active', mode === 'advanced');
         };
 
-        // ============================================================
-        // Table State
-        // ============================================================
         let tableData = [], tableKeys = [], sortConfig = { col: null, dir: 'asc' };
         let currentPage = 1, pageSize = 10, searchQuery = '';
 
@@ -598,17 +647,17 @@
                 const s = stats[col];
                 const min = s.min ?? 0, max = s.max ?? 0, mean = s.mean ?? 0, std = s.std ?? 0;
                 const rng = (max - min) || 1;
-                
+
                 // Percentages for the main range track
                 const meanPct = Math.max(0, Math.min(100, ((mean - min) / rng) * 100)).toFixed(1);
-                
+
                 // Percentages for the individual magnitude bars (relative to max in this column for comparison)
                 // Or maybe relative to the range? Let's do magnitude relative to max vs min range.
                 const absMax = Math.max(Math.abs(max), Math.abs(min)) || 1;
                 const getPct = (val) => Math.max(0, Math.min(100, (Math.abs(val) / absMax) * 100)).toFixed(1);
 
                 const stdHigh = s.std && s.std > rng * 0.3;
-                
+
                 html += `
         <div class="stat-accordion">
           <div class="stat-accordion-header" onclick="toggleAccordion(this)">
@@ -639,7 +688,7 @@
                 
                 <div class="stat-bar-item">
                     <div class="stat-bar-label"><span>Standard Deviation Magnitude</span><span>${std.toFixed(2)}</span></div>
-                    <div class="stat-bar-bg"><div class="stat-bar-fill std" style="width:${Math.min(100, (std/rng)*100)}%;"></div></div>
+                    <div class="stat-bar-bg"><div class="stat-bar-fill std" style="width:${Math.min(100, (std / rng) * 100)}%;"></div></div>
                 </div>
             </div>
 
@@ -697,9 +746,6 @@
             document.getElementById('correlation-content').innerHTML = cHTML;
         }
 
-        // ============================================================
-        // Column Analysis – Color Badges
-        // ============================================================
         function getColType(cData) {
             if (cData.is_category_column) return { icon: 'fa-font', color: '#c084fc', label: 'Category' };
             if (cData.is_money_column) return { icon: 'fa-dollar-sign', color: '#4ade80', label: 'Currency' };
@@ -748,9 +794,6 @@
                 cards.length ? cards.join('') : '<p>No column data available.</p>';
         }
 
-        // ============================================================
-        // AI Insights – Bullets + Confidence + Copy
-        // ============================================================
         function formatBullets(text) {
             if (!text || text.length < 10) return `<span style="color:#b0a0ff;font-style:italic;">${text || '...'}</span>`;
             const parts = text
@@ -792,9 +835,6 @@
             });
         };
 
-        // ============================================================
-        // Charts (Carousel – unchanged logic)
-        // ============================================================
         function renderCharts(options) {
             const grid = document.getElementById('charts-grid');
             grid.innerHTML = '';
@@ -846,18 +886,18 @@
                     title.textContent = opt.reason || 'No description';
                     const wrap = document.createElement('div'); wrap.className = 'canvas-wrapper'; wrap.style.height = '350px';
                     const canvas = document.createElement('canvas');
-                    wrap.appendChild(canvas); 
-                    
+                    wrap.appendChild(canvas);
+
                     const expl = document.createElement('p'); expl.className = 'chart-explanation';
                     const lang = getCurrentLang();
                     const expText = opt.explanation ? (opt.explanation[lang] || opt.explanation['en']) : '';
                     if (expText) {
                         expl.innerHTML = `<i class="fas fa-lightbulb" style="color:#fbbf24; margin-right:5px; margin-left:5px;"></i> ${expText}`;
                     }
-                    
+
                     card.append(title, wrap);
                     if (expText) card.append(expl);
-                    
+
                     track.appendChild(card);
                     window.chartCarousels[safe].cards.push(card);
                     setTimeout(() => {
@@ -865,27 +905,27 @@
                             const ctx = canvas.getContext('2d');
                             let cData = opt.data;
                             const cType = opt.chart_type === 'histogram' ? 'bar' : (opt.chart_type || 'bar');
-                            
+
                             if (!cData || !cData.datasets || cData.datasets.length === 0) {
-                                cData = { 
-                                    labels: ['No Data Available'], 
-                                    datasets: [{ 
-                                        label: 'Data Missing', 
-                                        data: [0], 
-                                        backgroundColor: ['#6a1b9a'] 
-                                    }] 
+                                cData = {
+                                    labels: ['No Data Available'],
+                                    datasets: [{
+                                        label: 'Data Missing',
+                                        data: [0],
+                                        backgroundColor: ['#6a1b9a']
+                                    }]
                                 };
                                 title.textContent += ' (Missing visual data from backend)';
                             } else {
                                 cData.datasets.forEach(ds => {
                                     if (!ds.backgroundColor || cType === 'pie' || cType === 'doughnut') {
                                         ds.backgroundColor = elegantColors.slice(0, cData.labels?.length || 1);
-                                        ds.borderColor = 'rgba(255,255,255,.1)'; 
+                                        ds.borderColor = 'rgba(255,255,255,.1)';
                                         ds.borderWidth = 1;
                                     }
                                 });
                             }
-                            
+
                             new Chart(ctx, {
                                 type: cType, data: cData,
                                 options: {
@@ -909,7 +949,7 @@
                                 const ctx = canvas.getContext('2d');
                                 new Chart(ctx, {
                                     type: 'bar',
-                                    data: { labels: ['Error'], datasets: [{label: err.message, data: [1], backgroundColor: ['#f87171']}] },
+                                    data: { labels: ['Error'], datasets: [{ label: err.message, data: [1], backgroundColor: ['#f87171'] }] },
                                     options: { maintainAspectRatio: false }
                                 });
                             }
@@ -919,9 +959,6 @@
             });
         }
 
-        // ============================================================
-        // Export & Modal
-        // ============================================================
         let _allData = {};
         function openExportModal() { document.getElementById('export-modal').style.display = 'flex'; }
         function closeExportModal(e) {
@@ -941,39 +978,46 @@
             closeExportModal();
         }
 
-        async function cleanData() {
-            const action = prompt("Enter cleaning action (drop_missing, fill_mean, drop_outliers):", "fill_mean");
-            if (!action) return;
-            
-            document.getElementById('loading-overlay').style.display = 'flex';
-            document.querySelector('#loading-overlay p').textContent = "Cleaning your data...";
-            
-            const urlParams = new URLSearchParams(window.location.search);
-            const fileId = urlParams.get('id') || urlParams.get('file_id') || localStorage.getItem('last_file_id');
-            
-            try {
-                const res = await fetch(`http://127.0.0.1:8000/analysis/clean/${fileId}`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ action: action })
-                });
-                const data = await res.json();
-                if (data.new_file_id) {
-                    alert(data.message);
-                    window.location.href = `analysisP.html?id=${data.new_file_id}`;
-                } else {
-                    alert("Error: " + JSON.stringify(data));
-                    document.getElementById('loading-overlay').style.display = 'none';
-                }
-            } catch (err) {
-                alert("Failed to clean data: " + err.message);
-                document.getElementById('loading-overlay').style.display = 'none';
-            }
-        }
+window.openCleanModal = () => { document.getElementById('clean-modal').style.display = 'flex'; };
+window.closeCleanModal = (e) => {
+    if (!e || e.target === document.getElementById('clean-modal'))
+        document.getElementById('clean-modal').style.display = 'none';
+};
 
-        // ============================================================
-        // History
-        // ============================================================
+async function submitCleanData() {
+    const selectedRadio = document.querySelector('input[name="cleanAction"]:checked');
+    if (!selectedRadio) return;
+    
+    const action = selectedRadio.value;
+    closeCleanModal(); 
+    
+    document.getElementById('loading-overlay').style.display = 'flex';
+    document.querySelector('#loading-overlay p').setAttribute('data-i18n', 'cleaningMsg');
+    document.querySelector('#loading-overlay p').textContent = "The Wizard is processing and re-analyzing your data...";
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const fileId = urlParams.get('id') || urlParams.get('file_id') || localStorage.getItem('last_file_id');
+    
+    try {
+        const res = await fetch(`http://127.0.0.1:8000/analysis/clean/${fileId}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ action: action })
+        });
+        const data = await res.json();
+        if (data.new_file_id) {
+            localStorage.removeItem(`cache_analysis_${fileId}`);
+            window.location.href = `analysisP.html?id=${data.new_file_id}`;
+        } else {
+            alert("Error: " + JSON.stringify(data));
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+    } catch (err) {
+        alert("Failed to clean data: " + err.message);
+        document.getElementById('loading-overlay').style.display = 'none';
+    }
+}
+
         function saveHistory(basic, fileId) {
             const h = JSON.parse(localStorage.getItem('dw-history') || '[]');
             const entry = {
@@ -987,9 +1031,6 @@
             localStorage.setItem('dw-history', JSON.stringify(updated));
         }
 
-        // ============================================================
-        // KPI Strip
-        // ============================================================
         function updateKPIStrip(basic, adv) {
             document.getElementById('kpi-strip').style.display = 'flex';
             document.getElementById('kpi-rows').textContent = basic.rows || basic.basic_info?.total_rows || 0;
@@ -1003,9 +1044,6 @@
             document.getElementById('kpi-numeric').textContent = Object.keys(adv?.numeric_statistics || {}).length;
         }
 
-        // ============================================================
-        // Main Loader
-        // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             let fileId = urlParams.get('id') || urlParams.get('file_id') || localStorage.getItem('last_file_id');
@@ -1022,18 +1060,31 @@
 
             async function loadAll() {
                 try {
-                    const [basicRes, advRes, aiRes, vizRes] = await Promise.all([
-                        fetch(`http://127.0.0.1:8000/analysis/analyze/${fileId}`),
-                        fetch(`http://127.0.0.1:8000/analysis/advanced/${fileId}`),
-                        fetch(`http://127.0.0.1:8000/ai/insights/${fileId}?lang=${getCurrentLang()}`),
-                        fetch(`http://127.0.0.1:8000/visualization/${fileId}`)
-                    ]);
-                    const basic = await basicRes.json();
-                    const adv = await advRes.json();
-                    const aiData = await aiRes.json();
-                    const vizData = await vizRes.json();
+                    const cacheKey = `cache_analysis_${fileId}`;
+                    const cachedData = localStorage.getItem(cacheKey);
 
-                    _allData = { basic, adv, aiData, vizData };
+                    if (cachedData) {
+                        console.log("Loading data from local cache...");
+                        _allData = JSON.parse(cachedData);
+                    } else {
+                        console.log("No cache found. Fetching fresh data from server...");
+                        const [basicRes, advRes, aiRes, vizRes] = await Promise.all([
+                            fetch(`http://127.0.0.1:8000/analysis/analyze/${fileId}`),
+                            fetch(`http://127.0.0.1:8000/analysis/advanced/${fileId}`),
+                            fetch(`http://127.0.0.1:8000/ai/insights/${fileId}?lang=${getCurrentLang()}`),
+                            fetch(`http://127.0.0.1:8000/visualization/${fileId}`)
+                        ]);
+                        const basic = await basicRes.json();
+                        const adv = await advRes.json();
+                        const aiData = await aiRes.json();
+                        const vizData = await vizRes.json();
+
+                        _allData = { basic, adv, aiData, vizData };
+
+                        localStorage.setItem(cacheKey, JSON.stringify(_allData));
+                    }
+
+                    const { basic, adv, aiData, vizData } = _allData;
 
                     // Custom file name check
                     const cName = localStorage.getItem('custom_name_' + fileId);
@@ -1057,9 +1108,7 @@
                     document.getElementById('stat-rows') && (document.getElementById('stat-rows').textContent = basic.rows || 0);
                     document.getElementById('stat-cols') && (document.getElementById('stat-cols').textContent = basic.columns || 0);
 
-
                     // Initialize sets if they are empty (first load)
-                    // Filters start empty as per refinement request
                     activeNumericCols.clear();
                     activeCorrCols.clear();
 
@@ -1076,7 +1125,7 @@
 
                     // Charts 
                     let vizList = (vizData.visualization_options || []).filter(opt => opt.data && opt.data.datasets && opt.data.datasets.length > 0);
-                    
+
                     if (!vizList.length) {
                         const statKeys = Object.keys(adv.numeric_statistics || {});
                         if (statKeys.length) {
@@ -1093,7 +1142,7 @@
                                     }]
                                 }
                             });
-                             vizList.push({
+                            vizList.push({
                                 chart_type: 'pie',
                                 reason: 'Data Quality (Missing vs Present rows)',
                                 data: {
@@ -1111,22 +1160,21 @@
                     }
                     renderCharts(vizList);
 
-
                     // AI Insights
                     const biz = aiData.business_insights || aiData;
                     if (biz.error || aiData.error || (biz.message && biz.message.includes('No data'))) {
                         const errMsg = biz.error || aiData.error || biz.message;
                         setInsight('ai-summary', 'conf-summary', `AI Error: ${errMsg}. Please ensure the Gemini API key is configured correctly in the backend.`);
-                        ['ai-pricing','ai-growth','ai-customer','ai-risk','ai-global','ai-forecast','ai-chart-sugg']
-                        .forEach(id => setInsight(id, '', 'Analysis failed.'));
+                        ['ai-pricing', 'ai-growth', 'ai-customer', 'ai-risk', 'ai-global', 'ai-forecast', 'ai-chart-sugg']
+                            .forEach(id => setInsight(id, '', 'Analysis failed.'));
                     } else {
-                        setInsight('ai-summary',    'conf-summary',   biz.summary || biz.executive_summary || '');
-                        setInsight('ai-pricing',    'conf-pricing',   biz.pricing_strategy || '');
-                        setInsight('ai-growth',     'conf-growth',    biz.growth_opportunities || biz.opportunities || '');
-                        setInsight('ai-customer',   'conf-customer',  biz.customer_strategy || '');
-                        setInsight('ai-risk',       'conf-risk',      biz.risk_alerts || biz.risk_assessment || '');
-                        setInsight('ai-global',     'conf-global',    biz.global_comparison || '');
-                        setInsight('ai-forecast',   'conf-forecast',  biz.forecast_message || '');
+                        setInsight('ai-summary', 'conf-summary', biz.summary || biz.executive_summary || '');
+                        setInsight('ai-pricing', 'conf-pricing', biz.pricing_strategy || '');
+                        setInsight('ai-growth', 'conf-growth', biz.growth_opportunities || biz.opportunities || '');
+                        setInsight('ai-customer', 'conf-customer', biz.customer_strategy || '');
+                        setInsight('ai-risk', 'conf-risk', biz.risk_alerts || biz.risk_assessment || '');
+                        setInsight('ai-global', 'conf-global', biz.global_comparison || '');
+                        setInsight('ai-forecast', 'conf-forecast', biz.forecast_message || '');
                         setInsight('ai-chart-sugg', 'conf-chartsugg', biz.chart_suggestion || '');
                     }
 
@@ -1166,27 +1214,22 @@
                 if (window.auth && typeof window.auth.logout === 'function') {
                     window.auth.logout({ clearAllSession: true, redirect: 'login.html' });
                 } else {
-                    const keys = ['access_token','id_token','refresh_token','user','dw_user','currentUser'];
+                    const keys = ['access_token', 'id_token', 'refresh_token', 'user', 'dw_user', 'currentUser'];
                     keys.forEach(k => localStorage.removeItem(k));
-                    try { sessionStorage.clear(); } catch (e) {}
+                    try { sessionStorage.clear(); } catch (e) { }
                     window.location.href = 'login.html';
                 }
             });
         });
 
-        // ============================================================
-        // Translate Insights Only (without full reload)
-        // ============================================================
-        let insightsLang = 'original'; // 'original' or 'translated'
-        let originalTexts = {};       // Store original card texts for toggling back
+        let insightsLang = 'original';
+        let originalTexts = {};
 
-        // Card IDs mapped to keys for the translate API
         const insightCardIds = [
             'ai-summary', 'ai-pricing', 'ai-growth', 'ai-customer',
             'ai-risk', 'ai-global', 'ai-forecast', 'ai-chart-sugg'
         ];
 
-        // Initialize translate button label based on current page language
         document.addEventListener('DOMContentLoaded', () => {
             const btn = document.getElementById('translateInsightsBtn');
             if (btn) {

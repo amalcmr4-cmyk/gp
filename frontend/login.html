@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="login.css">
@@ -11,78 +12,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="i18n.js"></script>
 </head>
+
 <body>
+    <div id="toastContainer" class="toast-container"></div>
+    <div id="loginPopup" class="popup-overlay" style="display: flex;">
 
-<div id="loginPopup" class="popup-overlay" style="display: flex;">
+        <div class="login-card">
 
-    <div class="login-card">
+            <a href="home2.html" class="close-btn">&times;</a>
 
-        <a href="home2.html" class="close-btn">&times;</a>
+            <div class="icon-circle">➜</div>
 
-        <div class="icon-circle">➜</div>
+            <div class="title" data-i18n="welcomeBack">Welcome Back</div>
+            <div class="subtitle" data-i18n="signInAccount">Sign in to your account</div>
 
-        <div class="title" data-i18n="welcomeBack">Welcome Back</div>
-        <div class="subtitle" data-i18n="signInAccount">Sign in to your account</div>
+            <form id="loginForm">
+                <label data-i18n="email">Email</label>
+                <input type="email" data-i18n-placeholder="emailPlaceholder" placeholder="Enter your email" required>
 
-        <form id="loginForm">
-            <label data-i18n="email">Email</label>
-            <input type="email" data-i18n-placeholder="emailPlaceholder" placeholder="Enter your email" required>
+                <label data-i18n="password">Password</label>
+                <input type="password" data-i18n-placeholder="passPlaceholder" placeholder="Enter password" required>
 
-            <label data-i18n="password">Password</label>
-            <input type="password" data-i18n-placeholder="passPlaceholder" placeholder="Enter password" required>
+                <button type="submit" data-i18n="signInBtn">Sign In</button>
+            </form>
 
-            <button type="submit" data-i18n="signInBtn">Sign In</button>
-        </form>
+            <a href="forgot-password.html" class="forgot" data-i18n="forgotPass">Forgot password?</a>
 
-        <a href="forgot-password.html" class="forgot" data-i18n="forgotPass">Forgot password?</a>
+            <p class="already-have-account">
+                <span data-i18n="noAccount">Don't have an account?</span> <a href="signup.html"
+                    data-i18n="signUpLink">Sign up</a>
+            </p>
 
-        <p class="already-have-account">
-            <span data-i18n="noAccount">Don't have an account?</span> <a href="signup.html" data-i18n="signUpLink">Sign up</a>
-        </p>
-
+        </div>
     </div>
-</div>
 
-<script>
-document.getElementById("loginForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
+    <script>
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `dw-toast ${type}`;
 
-    const email = this.querySelector('input[type="email"]').value;
-    const password = this.querySelector('input[type="password"]').value;
+            const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
 
-    const btn = this.querySelector('button');
-    btn.innerHTML = "Loading...";
-    btn.disabled = true;
+            toast.innerHTML = `
+        <i class="fa-solid ${icon}"></i>
+        <div class="toast-message">${message}</div>
+    `;
 
-    try {
-        const res = await fetch("http://127.0.0.1:8000/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ email, password })
-        });
+            container.appendChild(toast);
 
-        const data = await res.json();
+            setTimeout(() => toast.classList.add('show'), 10);
 
-        if (!res.ok) {
-            alert(data.detail || "Login failed");
-            btn.innerHTML = "Sign In";
-            btn.disabled = false;
-            return;
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, 3500);
         }
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-        localStorage.setItem("access_token", data.access_token);
+            const email = this.querySelector('input[type="email"]').value;
+            const password = this.querySelector('input[type="password"]').value;
 
-        window.location.href = "home2.html?login=success";
+            const btn = this.querySelector('button');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${window.t('authenticating') || 'Loading...'}`;
+            btn.disabled = true;
 
-    } catch (err) {
-        alert("Server error");
-        btn.innerHTML = "Sign In";
-        btn.disabled = false;
-    }
-});
-</script>
+            try {
+                const res = await fetch("http://127.0.0.1:8000/auth/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    showToast(data.detail || "Login failed", "error");
+                    btn.innerHTML = window.t('signInBtn') || "Sign In";
+                    btn.disabled = false;
+                    return;
+                }
+
+                localStorage.setItem("access_token", data.access_token);
+
+                showToast("Logged in successfully! Redirecting...", "success");
+
+                setTimeout(() => {
+                    window.location.href = "home2.html?login=success";
+                }, 1000);
+
+            } catch (err) {
+                showToast("Server error, please try again", "error");
+                btn.innerHTML = window.t('signInBtn') || "Sign In";
+                btn.disabled = false;
+            }
+        });
+    </script>
 
 </body>
+
 </html>

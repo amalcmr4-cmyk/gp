@@ -159,7 +159,6 @@ button:hover {
     100% { opacity: 1; }
 }
 
-/* ═══════════ RTL Support ═══════════ */
 [dir="rtl"] .login-card { text-align: center; }
 [dir="rtl"] label { text-align: right; }
 [dir="rtl"] .close-btn { right: auto; left: 22px; }
@@ -173,3 +172,51 @@ button:hover {
     position: absolute; top: 15px; left: auto; right: auto;
     margin: 0 auto;
 }
+.toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        /* لتنعكس الجهة تلقائياً في الواجهة العربية */
+        html[dir="rtl"] .toast-container {
+            right: auto;
+            left: 20px;
+        }
+        .dw-toast {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(30, 20, 50, 0.95);
+            color: #fff;
+            padding: 14px 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: 'Tajawal', sans-serif;
+            min-width: 280px;
+            max-width: 400px;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+            opacity: 0;
+        }
+        html[dir="rtl"] .dw-toast {
+            transform: translateX(-120%);
+        }
+        .dw-toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .dw-toast.success { border-left: 4px solid #10b981; }
+        html[dir="rtl"] .dw-toast.success { border-left: none; border-right: 4px solid #10b981; }
+        
+        .dw-toast.error { border-left: 4px solid #ef4444; }
+        html[dir="rtl"] .dw-toast.error { border-left: none; border-right: 4px solid #ef4444; }
+
+        .dw-toast i { font-size: 1.2rem; }
+        .dw-toast.success i { color: #10b981; }
+        .dw-toast.error i { color: #ef4444; }
+        .toast-message { font-size: 0.9rem; font-weight: 500; }
