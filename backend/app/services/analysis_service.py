@@ -100,7 +100,8 @@ async def advanced_analysis_service(file_id: str, db):
         "numeric_statistics": {},
         "correlation": {},
         "data_quality": {},
-        "chart_suggestion": []
+        "chart_suggestion": [],
+        "time_analysis":{}
     }
     
     #col type
@@ -169,6 +170,44 @@ async def advanced_analysis_service(file_id: str, db):
 
         if is_date_column:
             chart_suggestions.append({"chart_type": "line", "column": column, "reason": "Time-series data detected"})
+
+            try:
+                df_temp = df.copy()
+                df_temp[column] = pd.to_datetime(df_temp[column], errors='coerce')
+                df_filtered = df_temp.dropna(subset=[column])
+                
+                if not df_filtered.empty:
+                    target_numeric = None
+                    for c in df.columns:
+                        if str(c).lower() in ['net_revenue', 'gross_revenue', 'sales', 'revenue', 'profit']:
+                            target_numeric = c
+                            break
+                    
+                    trend_summary = {}
+                    if target_numeric:
+                        df_filtered[target_numeric] = pd.to_numeric(df_filtered[target_numeric], errors='coerce').fillna(0)
+                        
+                        df_filtered['Month'] = df_filtered[column].dt.to_period('M').astype(str)
+                        monthly_series = df_filtered.groupby('Month')[target_numeric].sum()
+                        
+                        trend_summary = {
+                            "metric_name": target_numeric,
+                            "monthly_values": {str(k): round(float(v), 2) for k, v in monthly_series.to_dict().items()}
+                        }
+
+                    analysis["time_analysis"][column] = {
+                        "has_time_data": True,
+                        "time_column_name": column,
+                        "start_date": df_filtered[column].min().strftime('%Y-%m-%d'),
+                        "end_date": df_filtered[column].max().strftime('%Y-%m-%d'),
+                        "actual_monthly_data": trend_summary 
+                    }
+            except Exception as e:
+                analysis["time_analysis"][column] = {
+                    "has_time_data": True,
+                    "time_column_name": column,
+                    "error": f"Failed to group monthly data: {str(e)}"
+                }
         
         if chart_suggestions:
             analysis["chart_suggestion"].extend(chart_suggestions)

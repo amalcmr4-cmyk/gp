@@ -42,6 +42,8 @@ class BusinessInsightsGenerator:
 
     def prepare_business_context(self, analysis_result: Dict[str, Any]) -> str:
 
+
+
         if not analysis_result or analysis_result.get("basic_info", {}).get("total_rows", 0) == 0:
             return "No data available in the dataset."
 
@@ -57,6 +59,9 @@ Numeric Statistics:
 
 Correlations:
 {json.dumps(analysis_result.get('correlation', {}), indent=2, ensure_ascii=False)}
+
+Time-Based Columns:
+{json.dumps(analysis_result.get('time_analysis', {}), indent=2, ensure_ascii=False)}
 
 Data Quality:
 - Completeness: {analysis_result.get('data_quality', {}).get('completeness_percentage', 0)}%
@@ -91,6 +96,13 @@ Chart selection rules:
 - line: Use for time-based trends
 - pie: Use for percentage breakdown (less than 6 categories)
 - scatter: Use for relationships between two numeric variables
+
+CRITICAL FORECASTING RULES (For 'forecast_message' - MUST apply to ALL uploaded datasets):
+1. DO NOT just state that forecasting is "feasible", "possible", or "limited".
+2. You MUST provide actual numerical projections, future targets, or expected growth percentages for the upcoming periods based on the time scale available in the data.
+3. If the data spans MULTIPLE YEARS/QUARTERS: Calculate the growth rate (like CAGR or YoY) and project specific numbers and percentages for the next year or upcoming quarters, leveraging any detected seasonality (e.g., peak seasons or end-of-year surges).
+4. If the data spans a SHORT PERIOD (e.g., days or weeks): Perform a short-term trend extrapolation or data velocity analysis. Predict expected numbers or total revenue for the next upcoming days, weeks, or the full month based on the current daily run-rate.
+5. Always back your prediction with actual numbers comparing the historical baseline present in the dataset with the projected future values.
 
 Rules:
 - If no time-based column exists, set forecast_message to:
